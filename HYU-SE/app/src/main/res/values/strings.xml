@@ -4,5 +4,21 @@
     <string name="app_name">HYU-SE</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="region_do_array">
+        <item>경기</item>
+        <item>강원</item>
+        <item>경상</item>
+        <item>충청</item>
+        <item>전라</item>
+    </string-array>
+
+    <string-array name="region_si_array">
+        <item>서울</item>
+        <item>안산</item>
+        <item>수원</item>
+        <item>시흥</item>
+        <item>음어</item>
+    </string-array>
 </resources>
