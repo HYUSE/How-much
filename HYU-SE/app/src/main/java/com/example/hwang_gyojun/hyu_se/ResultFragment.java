@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 
 public class ResultFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private LineChart chart;
+    private ArrayList<String> xVals;
 
     public ResultFragment() {
         // Required empty public constructor
@@ -35,28 +38,7 @@ public class ResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_result, container, false);
-        LineChart chart = (LineChart) view.findViewById(R.id.chart);
-
-        ArrayList<Entry> valsComp1 = new ArrayList<Entry>();
-        ArrayList<Entry> valsComp2 = new ArrayList<Entry>();
-
-        Entry c1e1 = new Entry(100.000f, 0); // 0 == quarter 1
-        valsComp1.add(c1e1);
-        Entry c1e2 = new Entry(50.000f, 1); // 1 == quarter 2 ...
-        valsComp1.add(c1e2);
-        // and so on ...
-
-        Entry c2e1 = new Entry(120.000f, 0); // 0 == quarter 1
-        valsComp2.add(c2e1);
-        Entry c2e2 = new Entry(110.000f, 1); // 1 == quarter 2 ...
-        valsComp2.add(c2e2);
-
-        LineDataSet setComp1 = new LineDataSet(valsComp1, "Company 1");
-        LineDataSet setComp2 = new LineDataSet(valsComp2, "Company 2");
-
-        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        dataSets.add(setComp1);
-        dataSets.add(setComp2);
+        chart = (LineChart) view.findViewById(R.id.chart);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -64,13 +46,56 @@ public class ResultFragment extends Fragment {
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
-        ArrayList<String> xVals = new ArrayList<String>();
+        xVals = new ArrayList<String>();
         xVals.add("1.Q"); xVals.add("2.Q"); xVals.add("3.Q"); xVals.add("4.Q");
 
-        LineData data = new LineData(xVals, dataSets);
-        chart.setDescription("");
-        chart.setData(data);
-        chart.invalidate(); // refresh
+
+        Button button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
+        Button button_retail = (Button) view.findViewById(R.id.button_retail);
+
+        button_wholesale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Entry> valsComp1 = new ArrayList<Entry>();
+
+                Entry c1e1 = new Entry(100.000f, 0); // 0 == quarter 1
+                valsComp1.add(c1e1);
+                Entry c1e2 = new Entry(50.000f, 1); // 1 == quarter 2 ...
+                valsComp1.add(c1e2);
+
+
+                LineDataSet setComp1 = new LineDataSet(valsComp1, "Company 1");
+
+                ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+                dataSets.add(setComp1);
+
+                LineData data = new LineData(xVals, dataSets);
+                chart.setDescription("");
+                chart.setData(data);
+                chart.invalidate(); // refresh
+
+            }
+        });
+
+        button_retail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<Entry> valsComp2 = new ArrayList<Entry>();
+                Entry c2e1 = new Entry(120.000f, 0); // 0 == quarter 1
+                valsComp2.add(c2e1);
+                Entry c2e2 = new Entry(110.000f, 1); // 1 == quarter 2 ...
+                valsComp2.add(c2e2);
+                LineDataSet setComp2 = new LineDataSet(valsComp2, "Company 2");
+                ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+                dataSets.add(setComp2);
+
+                LineData data = new LineData(xVals, dataSets);
+                chart.setDescription("");
+                chart.setData(data);
+                chart.invalidate(); // refresh
+
+            }
+        });
 
         return view;
     }

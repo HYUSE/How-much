@@ -111,12 +111,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
+            finish();
             return;
         }
 
         this.doubleBackToExitPressedOnce = true;
-        finish();
 
         new Handler().postDelayed(new Runnable() {
 

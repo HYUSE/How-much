@@ -45,13 +45,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="도매"
-                android:id="@+id/button" />
+                android:id="@+id/button_wholesale" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="소매"
-                android:id="@+id/button2"
+                android:id="@+id/button_retail"
                 android:layout_gravity="center_horizontal" />
         </LinearLayout>
 
