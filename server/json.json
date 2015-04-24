@@ -1,0 +1,106 @@
+/* user device id => for login(when app start) */
+{
+    "type":"device_id"
+    "data":"ok"// "data":"notok"
+}
+
+{
+    "type":"device_id"
+    "data":[
+	{"id":"DEV-0101"}
+    ]
+}
+
+
+
+/* argo-fishery product info => for result screen */
+{
+    "type":"result_screen",
+    "data":[
+	{
+	    "price_r":"1000",
+	    "price_w":"100",
+	    "unit":"1kg",
+	    "price_date":"20150404"
+	},
+	{
+	    "price_r":"1000",
+	    "price_w":"100",
+	    "unit":"1kg",
+	    "price_date":"20150405"
+	}
+    ]
+}
+
+{
+    "type":"result_screen",
+    "data":"딸기"
+}
+
+/* auto-complete => for search screen */
+{
+    "type":"auto_complete",
+    "data":[
+	{"name":"딸기"},
+	{"name":"바나나"}
+    ]
+}
+
+{
+    "type":"auto_complete",
+    "data":"바"//user input in search bar
+}
+
+/* search result => for search screen */
+{
+    "type":"search_result",
+    "data":[
+	{"name":"딸기"},
+	{"name":"바나나"}
+    ]
+}
+
+{
+    "type":"search_result",
+    "data":"바"//user input in search bar
+}
+
+/* category_main, sub, ssub => for search index screen */
+{
+    "type":"main",
+    "data":[
+	{"name":"식량작물"},
+	{"name":"특수작물"}
+    ]
+}
+
+{
+    "type":"main"
+}
+
+{
+    "type":"sub",
+    "data":[
+	{"name":"쌀"},
+	{"name":"수수"}
+    ]
+}
+
+{
+    "type":"sub",
+    "data":"식량작물"
+}
+
+{
+    "type":"category_ssub",
+    "data":[
+	{"name":"일반계"},
+	{"name":"햇일반계"}
+    ]
+}
+
+
+{
+    "type":"category_ssub",
+    "data":"쌀"
+}
