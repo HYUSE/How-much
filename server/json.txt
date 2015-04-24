@@ -1,0 +1,72 @@
+/* user device id => for login(when app start) */
+{
+    "user":[
+	{"id":"device_id_1"},
+	{"id":"device_id_2"}
+    ]
+}
+
+/* argo-fishery product info => for result screen */
+{
+    "items":[
+	{
+	    "price_r":"1000",
+	    "price_w":"100",
+	    "unit":"1kg",
+	    "price_date":"20150404"
+	},
+	{
+	    "price_r":"1000",
+	    "price_w":"100",
+	    "unit":"1kg",
+	    "price_date":"20150405"
+	}
+    ]
+}
+
+/* home screen */
+{
+    "preferred_items":[
+	{"name":"딸기"},
+	{"name":"바나나"}
+    ]
+}
+
+/* auto-complete => for search screen */
+{
+    "auto_complete":[
+	{"name":"딸기"},
+	{"name":"바나나"}
+    ]
+}
+
+/* search result => for search screen */
+{
+    "search_result":[
+	{"name":"딸기"},
+	{"name":"바나나"}
+    ]
+}
+
+/* category_main, sub, ssub => for search index screen */
+{
+    "category_main":[
+	{"name":"식량작물"},
+	{"name":"특수작물"}
+    ]
+}
+
+{
+    "category_sub":[
+	{"name":"쌀"},
+	{"name":"수수"}
+    ]
+}
+
+{
+    "category_ssub":[
+	{"name":"일반계"},
+	{"name":"햇일반계"}
+    ]
+}
+
