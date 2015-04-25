@@ -52,6 +52,10 @@ public class HomeFragment extends Fragment {
                 // replace fragment
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
+                Bundle bundle = new Bundle();
+                bundle.putString("product", list_adapter.getItem(position));
+                newFragment.setArguments(bundle);
+
                 transaction.replace(fragment_layout, newFragment);
 
                 // Commit the transaction

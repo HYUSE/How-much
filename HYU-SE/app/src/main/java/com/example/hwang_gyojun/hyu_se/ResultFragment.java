@@ -5,10 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -17,15 +19,42 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class ResultFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private LineChart chart;
     private ArrayList<String> xVals;
+    private String mStrJson;
+    private ArrayList<Entry> valsComp1;
+    private ArrayList<Entry> valsComp2;
 
     public ResultFragment() {
         // Required empty public constructor
+        mStrJson =
+                "{\n" +
+                        "    \"type\":\"result_screen\",\n" +
+                        "    \"data\":[\n" +
+                        "\t{\n" +
+                        "\t    \"price_r\":\"1000\",\n" +
+                        "\t    \"price_w\":\"150\",\n" +
+                        "\t    \"unit\":\"1kg\",\n" +
+                        "\t    \"price_date\":\"20150404\"\n" +
+                        "\t},\n" +
+                        "\t{\n" +
+                        "\t    \"price_r\":\"1500\",\n" +
+                        "\t    \"price_w\":\"100\",\n" +
+                        "\t    \"unit\":\"1kg\",\n" +
+                        "\t    \"price_date\":\"20150405\"\n" +
+                        "\t}\n" +
+                        "    ]\n" +
+                        "}";
+        valsComp1 = new ArrayList<Entry>();
+        valsComp2 = new ArrayList<Entry>();
     }
 
     @Override
@@ -38,6 +67,12 @@ public class ResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_result, container, false);
+        Bundle bundle = this.getArguments();
+        String product_name = bundle.getString("product", "NULL");
+
+        TextView procut_textview = (TextView) view.findViewById(R.id.product);
+        procut_textview.setText(product_name);
+
         chart = (LineChart) view.findViewById(R.id.chart);
 
         XAxis xAxis = chart.getXAxis();
@@ -46,9 +81,10 @@ public class ResultFragment extends Fragment {
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
-        xVals = new ArrayList<String>();
-        xVals.add("1.Q"); xVals.add("2.Q"); xVals.add("3.Q"); xVals.add("4.Q");
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setValueFormatter(new MyLabelFormatter());
 
+        xVals = new ArrayList<String>();
 
         Button button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
         Button button_retail = (Button) view.findViewById(R.id.button_retail);
@@ -56,23 +92,16 @@ public class ResultFragment extends Fragment {
         button_wholesale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Entry> valsComp1 = new ArrayList<Entry>();
-
-                Entry c1e1 = new Entry(100.000f, 0); // 0 == quarter 1
-                valsComp1.add(c1e1);
-                Entry c1e2 = new Entry(50.000f, 1); // 1 == quarter 2 ...
-                valsComp1.add(c1e2);
-
-
-                LineDataSet setComp1 = new LineDataSet(valsComp1, "Company 1");
-
+                LineDataSet setComp1 = new LineDataSet(valsComp1, "도매");
+                setComp1.setValueFormatter(new MyLabelFormatter());
                 ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
                 dataSets.add(setComp1);
 
                 LineData data = new LineData(xVals, dataSets);
-                chart.setDescription("");
+                data.setValueFormatter(new MyLabelFormatter());
                 chart.setData(data);
                 chart.invalidate(); // refresh
+
 
             }
         });
@@ -80,22 +109,43 @@ public class ResultFragment extends Fragment {
         button_retail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Entry> valsComp2 = new ArrayList<Entry>();
-                Entry c2e1 = new Entry(120.000f, 0); // 0 == quarter 1
-                valsComp2.add(c2e1);
-                Entry c2e2 = new Entry(110.000f, 1); // 1 == quarter 2 ...
-                valsComp2.add(c2e2);
-                LineDataSet setComp2 = new LineDataSet(valsComp2, "Company 2");
+                LineDataSet setComp2 = new LineDataSet(valsComp2, "소매");
+                setComp2.setValueFormatter(new MyLabelFormatter());
                 ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
                 dataSets.add(setComp2);
 
                 LineData data = new LineData(xVals, dataSets);
-                chart.setDescription("");
+                data.setValueFormatter(new MyLabelFormatter());
                 chart.setData(data);
                 chart.invalidate(); // refresh
 
             }
         });
+
+        try {
+            JSONObject object = new JSONObject(mStrJson);
+            JSONArray data = new JSONArray(object.getString("data"));
+
+            if(object.getString("type").equals("result_screen"))
+                Log.d("TYPE","RESULT_SCREEN");
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject insideObject = data.getJSONObject(i);
+
+                Entry retail = new Entry(new Float(insideObject.getString("price_r")).floatValue() ,i);
+                Entry wholesale = new Entry(new Float(insideObject.getString("price_w")).floatValue(), i);
+
+                valsComp1.add(wholesale);
+                valsComp2.add(retail);
+
+                chart.setDescription("단위 : " + insideObject.getString("unit"));
+                xVals.add(insideObject.getString("price_date"));
+            }
+
+        } catch (JSONException e) {
+            Log.d("tag", "Parse Error");
+        }
+
 
         return view;
     }
