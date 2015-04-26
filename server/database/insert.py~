@@ -1,9 +1,9 @@
 #-*- coding: utf-8 -*-
 import sys
-#sys.path.append("/usr/local/lib/python2.7/dist-packages")
+
 import xlrd
 from xlrd.sheet import ctype_text
-#import MySQLdb
+
 
 # Open the workbook and define the worksheet
 workbook = xlrd.open_workbook("pytest.xlsx")

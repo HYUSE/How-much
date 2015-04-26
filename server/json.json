@@ -1,6 +1,6 @@
 /* user device id => for login(when app start) */
 {
-    "type":"device_id"
+    "type":"device_id",
     "data":"ok"// "data":"notok"
 }
 
@@ -34,15 +34,19 @@
 
 {
     "type":"result_screen",
-    "data":"딸기"
+    "data":{
+	"main":"",
+	"sub":"",
+	"ssub":""
+    }
 }
 
 /* auto-complete => for search screen */
 {
     "type":"auto_complete",
     "data":[
-	{"name":"딸기"},
-	{"name":"바나나"}
+	{"main":"", "sub":"", "ssub":""},
+	{"main":"", "sub":"", "ssub":""}
     ]
 }
 
@@ -55,8 +59,8 @@
 {
     "type":"search_result",
     "data":[
-	{"name":"딸기"},
-	{"name":"바나나"}
+	{"main":"", "sub":"", "ssub":""},
+	{"main":"", "sub":"", "ssub":""}
     ]
 }
 
