@@ -1,31 +1,44 @@
+/* id is sub id */
 /* user device id => for login(when app start) */
-{
-    "type":"device_id",
-    "data":"ok"// "data":"notok"
-}
+// {
+//      "data":"ok"// "data":"notok"
+// }
 
+// {
+//     "type":"device_id"
+//     "data":[
+// 	{"id":"DEV-0101"}
+//     ]
+// }
+/* home */
 {
-    "type":"device_id"
     "data":[
-	{"id":"DEV-0101"}
+	{ "sub_id":"", "data":[{"grade":"", "name":"", "price_r":"", "price_w":"" }, {"grade":"", "name":"", "price_r":"", "price_w":"" }]}, 
+	{ "sub_id":"", "data":[{"grade":"", "name":"", "price_r":"", "price_w":"" }, {"grade":"", "name":"", "price_r":"", "price_w":"" }]}
     ]
 }
 
-
+{
+    "type":"home",
+    "data":[
+	{"sub_id":"10"},
+	{"sub_id":"11"},
+	{"sub_id":"12"}
+    ]
+}
 
 /* argo-fishery product info => for result screen */
 {
-    "type":"result_screen",
     "data":[
 	{
-	    "ssub":"상품"
+	    "grade":"상품"
 	    "price_r":"1000",
 	    "price_w":"100",
 	    "unit":"1kg",
 	    "price_date":"20150404"
 	},
 	{
-	    "ssub":"중품"
+	    "grade":"중품"
 	    "price_r":"1000",
 	    "price_w":"100",
 	    "unit":"1kg",
@@ -35,20 +48,18 @@
 }
 
 {
-    "type":"result_screen",
+    "type":"result",
     "data":{
-	"category":"",
-	"main":"",
-	"sub":""
+	"sub_id":"11",
+	"region_si":"광주"
     }
 }
 
 /* auto-complete => for search screen */
 {
-    "type":"auto_complete",
     "data":[
-	{"category":"", "main":"", "sub":""},
-	{"category":"", "main":"", "sub":""}
+	{"name:":"쌀(햇일반게)", "sub_id":"13"},
+	{"name:":"쌀(일반게)", "sub_id":"13"},
     ]
 }
 
@@ -57,26 +68,11 @@
     "data":"바"//user input in search bar
 }
 
-/* search result => for search screen */
+/* category, main, sub => for search index screen */
 {
-    "type":"search_result",
     "data":[
-	{"category":"", "main":"", "sub":""},
-	{"category":"", "main":"", "sub":""}
-    ]
-}
-
-{
-    "type":"search_result",
-    "data":"바"//user input in search bar
-}
-
-/* category_main, sub, ssub => for search index screen */
-{
-    "type":"category",
-    "data":[
-	{"name":"식량작물"},
-	{"name":"특수작물"}
+	{"name":"식량작물", "cate_id":"13"},
+	{"name":"특수작물", "cate_id":"11"}
     ]
 }
 
@@ -87,26 +83,25 @@
 {
     "type":"main",
     "data":[
-	{"name":"쌀"},
-	{"name":"수수"}
+	{"name":"쌀", "main_id":"7"},
+	{"name":"수수", "main_id":"8"}
     ]
 }
 
 {
     "type":"main",
-    "data":"식량작물"
+    "data":"13"//category id
 }
 
 {
-    "type":"sub",
     "data":[
-	{"name":"일반계"},
-	{"name":"햇일반계"}
+	{"name":"일반계", "sub_id"="7"},
+	{"name":"햇일반계", "sub_id"="9"}
     ]
 }
 
 
 {
     "type":"sub",
-    "data":"쌀"
+    "data":"쌀"//main id
 }
