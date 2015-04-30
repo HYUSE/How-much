@@ -1,3 +1,5 @@
+# 2012036774
+# Kim Haryeong
 import json
 from price.models import *
 

@@ -1,4 +1,6 @@
 #-*- coding: utf-8 -*-
+# 2012036774
+# Kim Haryeong
 import sys
 import xlrd
 from xlrd.sheet import ctype_text

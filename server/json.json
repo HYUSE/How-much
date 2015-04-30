@@ -31,14 +31,14 @@
 {
     "data":[
 	{
-	    "grade":"상품"
+	    "grade":"상품",
 	    "price_r":"1000",
 	    "price_w":"100",
 	    "unit":"1kg",
 	    "price_date":"20150404"
 	},
 	{
-	    "grade":"중품"
+	    "grade":"중품",
 	    "price_r":"1000",
 	    "price_w":"100",
 	    "unit":"1kg",
@@ -95,8 +95,8 @@
 
 {
     "data":[
-	{"name":"일반계", "sub_id"="7"},
-	{"name":"햇일반계", "sub_id"="9"}
+	{"name":"일반계", "sub_id":"7"},
+	{"name":"햇일반계", "sub_id":"9"}
     ]
 }
 

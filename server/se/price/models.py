@@ -1,4 +1,6 @@
 # -*- coding :utf-8 -*-
+# 2012036774
+# Kim Haryeong
 from django.db import models
 
 class RegionDo(models.Model):
@@ -23,13 +25,19 @@ class SSub(models.Model):
     name = models.CharField(max_length=255)
     sub = models.ForeignKey(Sub)
 
-class Item(models.Model):
-    price_r = models.IntegerField('Retail Price', blank=True, null=True)
-    price_w = models.IntegerField('Wholesale Price', blank=True, null=True)
+class Item_r(models.Model):
+    price = models.IntegerField('Retail Price', blank=True, null=True)
+    unit = models.CharField(max_length=255)
+    price_date = models.DateField('Price Date')
+    region = models.ForeignKey(RegionSi)
+    category = models.ForeignKey(SSub)
+    
+class Item_w(models.Model):
+    price = models.IntegerField('Wholesale Price', blank=True, null=True)
     unit = models.CharField(max_length=255)
     price_date = models.DateField('Price Date')
     region = models.ForeignKey(RegionSi)
     category = models.ForeignKey(SSub)
 
 class SUser(models.Model):
-    iemi = models.CharField(max_length=255)
+    device_id = models.CharField(max_length=255)
