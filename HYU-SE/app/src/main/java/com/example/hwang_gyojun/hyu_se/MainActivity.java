@@ -1,5 +1,6 @@
 package com.example.hwang_gyojun.hyu_se;
 
+import android.database.Cursor;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 
@@ -26,6 +27,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public final static int FRAGMENT_GPS = 3;
     private boolean doubleBackToExitPressedOnce;
 
+    private DBOpenHelper db_open_helper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         button_retrieve.setOnClickListener(this);
         Button button_gps = (Button) findViewById(R.id.button_gps);
         button_gps.setOnClickListener(this);
+
+        db_open_helper = new DBOpenHelper(this);
+        db_open_helper = db_open_helper.open();
+
+
 
         mCurrentFragmentIndex = FRAGMENT_HOME;
 

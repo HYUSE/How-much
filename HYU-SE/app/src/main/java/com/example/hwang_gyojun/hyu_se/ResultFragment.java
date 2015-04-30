@@ -19,11 +19,22 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class ResultFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -55,6 +66,36 @@ public class ResultFragment extends Fragment {
                         "}";
         valsComp1 = new ArrayList<Entry>();
         valsComp2 = new ArrayList<Entry>();
+    }
+
+    private String sendData(String type, String product, String category) throws IOException {
+        HttpPost request = makeHttpPost(type, product, category, "http://");
+
+        HttpClient client = new DefaultHttpClient();
+        ResponseHandler<String> reshandler = new BasicResponseHandler();
+        String result = client.execute(request, reshandler);
+        return result ;
+    }
+
+    //Post 방식일경우
+    private HttpPost makeHttpPost(String type, String product, String category, String url) {
+        HttpPost request = new HttpPost(url);
+        Vector<BasicNameValuePair> nameValue = new Vector<>();
+        nameValue.add(new BasicNameValuePair("type", type));
+        nameValue.add(new BasicNameValuePair("data", product));
+        nameValue.add(new BasicNameValuePair("category", category));
+        request.setEntity(makeEntity(nameValue));
+        return request ;
+    }
+
+    private HttpEntity makeEntity( Vector<BasicNameValuePair> nameValue ) {
+        HttpEntity result = null ;
+        try {
+            result = new UrlEncodedFormEntity(nameValue);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result ;
     }
 
     @Override
@@ -93,9 +134,17 @@ public class ResultFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 LineDataSet setComp1 = new LineDataSet(valsComp1, "도매");
+                setComp1.setColor(getResources().getColor(R.color.material_blue_grey_800));
                 setComp1.setValueFormatter(new MyLabelFormatter());
                 ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
                 dataSets.add(setComp1);
+
+                LineDataSet setComp2 = new LineDataSet(valsComp2, "소매");
+                setComp2.setValueFormatter(new MyLabelFormatter());
+                setComp2.setColor(getResources().getColor(R.color.material_deep_teal_500));
+                dataSets.add(setComp2);
+
+
 
                 LineData data = new LineData(xVals, dataSets);
                 data.setValueFormatter(new MyLabelFormatter());
@@ -141,7 +190,6 @@ public class ResultFragment extends Fragment {
                 chart.setDescription("단위 : " + insideObject.getString("unit"));
                 xVals.add(insideObject.getString("price_date"));
             }
-
         } catch (JSONException e) {
             Log.d("tag", "Parse Error");
         }
