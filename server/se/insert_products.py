@@ -51,10 +51,12 @@ def insertDB(whole_list, type_rw):
             sub, _ = Sub.objects.get_or_create(name=value['sub'], main=main)
             ssub, _ = SSub.objects.get_or_create(name=value['ssub'], sub=sub)
             if type_rw == "r":
-                item = Item_r(price=value['price'], unit=value['unit'], price_date=datetime(int(value['year']), int(value['month']), int(value['day'])), region=region_si, category=ssub)
-            elif type_rw == "w":
-                item = Item_w(price=value['price'], unit=value['unit'], price_date=datetime(int(value['year']), int(value['month']), int(value['day'])), region=region_si, category=ssub)
-#            item.save()
+                item = Item(price_r=value['price'], unit_r=value['unit'], price_date=datetime(int(value['year']), int(value['month']), int(value['day'])), region=region_si, category=ssub)
+            else:
+                item, _ = Item.objects.get_or_create(price_date=datetime(int(value['year']), int(value['month']), int(value['day'])), region=region_si, category=ssub)
+                item.price_w = value['price']
+                item.unit_w = value['unit']
+            item.save()
 
 insertDB(readExcel("20150429", "r"), "r")
 insertDB(readExcel("20150429", "w"), "w")

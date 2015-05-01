@@ -15,7 +15,7 @@ class Category(models.Model):
     
 class Main(models.Model):
     name = models.CharField(max_length=255)
-    category  = models.ForeignKey(Category)
+    category = models.ForeignKey(Category)
 
 class Sub(models.Model):
     name = models.CharField(max_length=255)
@@ -25,16 +25,11 @@ class SSub(models.Model):
     name = models.CharField(max_length=255)
     sub = models.ForeignKey(Sub)
 
-class Item_r(models.Model):
-    price = models.IntegerField('Retail Price', blank=True, null=True)
-    unit = models.CharField(max_length=255)
-    price_date = models.DateField('Price Date')
-    region = models.ForeignKey(RegionSi)
-    category = models.ForeignKey(SSub)
-    
-class Item_w(models.Model):
-    price = models.IntegerField('Wholesale Price', blank=True, null=True)
-    unit = models.CharField(max_length=255)
+class Item(models.Model):
+    price_r = models.IntegerField('Retail Price', blank=True, null=True)
+    price_w = models.IntegerField('Wholesale Price', blank=True, null=True)
+    unit_r = models.CharField('Retail unit', max_length=255, blank=True, null=True)
+    unit_w = models.CharField('Wholesale unit', max_length=255, blank=True, null=True)
     price_date = models.DateField('Price Date')
     region = models.ForeignKey(RegionSi)
     category = models.ForeignKey(SSub)

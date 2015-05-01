@@ -13,13 +13,14 @@
 /* home */
 {
     "data":[
-	{ "sub_id":"", "data":[{"grade":"", "name":"", "price_r":"", "price_w":"" }, {"grade":"", "name":"", "price_r":"", "price_w":"" }]}, 
-	{ "sub_id":"", "data":[{"grade":"", "name":"", "price_r":"", "price_w":"" }, {"grade":"", "name":"", "price_r":"", "price_w":"" }]}
+	{ "sub_id":"", "data":[{"grade":"", "name":"", "price_r":"", "price_w":"", "unit_r":"", "unit_w":"" }, {"grade":"", "name":"", "price_r":"", "price_w":"", "unit_r":"", "unit_w":"" }]}, 
+	{ "sub_id":"", "data":[{"grade":"", "name":"", "price_r":"", "price_w":"" , "unit_r":"", "unit_w":""}, {"grade":"", "name":"", "price_r":"", "price_w":"", "unit_r":"", "unit_w":"" }]}
     ]
 }
 
 {
     "type":"home",
+    "region_si":"광주",
     "data":[
 	{"sub_id":"10"},
 	{"sub_id":"11"},
@@ -34,7 +35,8 @@
 	    "grade":"상품",
 	    "price_r":"1000",
 	    "price_w":"100",
-	    "unit":"1kg",
+	    "unit_r":"1kg",
+	    "unit_w":"3kg",
 	    "price_date":"20150404"
 	},
 	{
@@ -42,6 +44,7 @@
 	    "price_r":"1000",
 	    "price_w":"100",
 	    "unit":"1kg",
+	    "unit":"3kg",
 	    "price_date":"20150405"
 	}
     ]
@@ -81,7 +84,6 @@
 }
 
 {
-    "type":"main",
     "data":[
 	{"name":"쌀", "main_id":"7"},
 	{"name":"수수", "main_id":"8"}
