@@ -22,7 +22,7 @@ def index(request):
 			items = Item.objects.filter(category__sub__id=data["sub_id"], region__name=region_si)
 			response_j["data"].append(dict(sub_id=items[0].category.sub.id, data=list()))
 			for item in items:
-				response_j["data"][i]["data"].append(dict(grade=item.category.name, name=item.category.sub.name, price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w))
+				response_j["data"][i]["data"].append(dict(grade=item.category.name, name=item.category.sub.main.name, price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w))
 			i+=1
 		return HttpResponse(json.dumps(response_j), content_type="application/json")
 
