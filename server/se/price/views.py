@@ -26,20 +26,20 @@ def index(request):
         return HttpResponse(json.dumps(response_j), content_type="application/json")
 
     if request_j["type"] == "result":
-        response_j = dict(data=list())
-        ssubs = SSub.objects.filter(sub__id=request_j["data"]["sub_id"])
-        for ssub in ssubs:
+    response_j = dict(data=list())
+    ssubs = SSub.objects.filter(sub__id=request_j["data"]["sub_id"])
+    for ssub in ssubs:
+        price = list()
+        for i in range(5):
             price = list()
-            for i in range(5):
-                price = list()
-                delta = timedelta(days=-i)
-                now = date.today() + delta
-                now = "%d%02d%02d" % (now.year, now.month, now.day)
-                items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
-                for item in items:
-                    price_date = str(item.price_date)
-                    price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
-                    price.append(dict(grade=item.category.name, price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            delta = timedelta(days=-i)
+            now = date.today() + delta
+            now = "%d%02d%02d" % (now.year, now.month, now.day)
+            items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            for item in items:
+                price_date = str(item.price_date)
+                price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+                price.append(dict(grade=item.category.name, price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
                 if len(price) != 0:
                     response_j["data"].append(dict(grade=ssub.name, price=price))
         return HttpResponse(json.dumps(response_j), content_type="application/json")
@@ -67,7 +67,7 @@ def index(request):
         mains = Main.objects.filter(category=Category.objects.get(id=request_j["data"]))
         for main in mains:
             response_j["data"].append(dict(name=main.name, main_id=main.id))
-        return HttpResponse(json.dumps(response_j), content_type="application/json")
+    return HttpResponse(json.dumps(response_j), content_type="application/json")
 
     if request_j["type"] == "sub":
         response_j = dict(data=list())
@@ -75,5 +75,4 @@ def index(request):
         for sub in subs:
             response_j["data"].append(dict(name=sub.name, sub_id=sub.id))
         return HttpResponse(json.dumps(response_j), content_type="application/json")
-
     return HttpResponse("else")
