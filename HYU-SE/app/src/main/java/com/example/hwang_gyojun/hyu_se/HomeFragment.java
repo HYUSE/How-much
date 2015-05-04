@@ -14,6 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
 
 public class HomeFragment extends Fragment {
@@ -48,7 +52,14 @@ public class HomeFragment extends Fragment {
         preference_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ResultFragment newFragment = new ResultFragment();
+                ResultFragment newFragment = null;
+                try {
+                    newFragment = new ResultFragment();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 // replace fragment
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 

@@ -2,6 +2,7 @@ package com.example.hwang_gyojun.hyu_se;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -19,83 +20,145 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class ResultFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
     private LineChart chart;
     private ArrayList<String> xVals;
-    private String mStrJson;
+    private static String mStrJson;
     private ArrayList<Entry> valsComp1;
     private ArrayList<Entry> valsComp2;
+    private String unit_r;
+    private String unit_w;
+    private ArrayList<String> grades;
 
-    public ResultFragment() {
-        // Required empty public constructor
-        mStrJson =
-                "{\n" +
-                        "    \"type\":\"result_screen\",\n" +
-                        "    \"data\":[\n" +
-                        "\t{\n" +
-                        "\t    \"price_r\":\"1000\",\n" +
-                        "\t    \"price_w\":\"150\",\n" +
-                        "\t    \"unit\":\"1kg\",\n" +
-                        "\t    \"price_date\":\"20150404\"\n" +
-                        "\t},\n" +
-                        "\t{\n" +
-                        "\t    \"price_r\":\"1500\",\n" +
-                        "\t    \"price_w\":\"100\",\n" +
-                        "\t    \"unit\":\"1kg\",\n" +
-                        "\t    \"price_date\":\"20150405\"\n" +
-                        "\t}\n" +
-                        "    ]\n" +
-                        "}";
+
+    public ResultFragment() throws JSONException, IOException {
         valsComp1 = new ArrayList<Entry>();
         valsComp2 = new ArrayList<Entry>();
     }
 
-    private String sendData(String type, String product, String category) throws IOException {
-        HttpPost request = makeHttpPost(type, product, category, "http://");
-
-        HttpClient client = new DefaultHttpClient();
-        ResponseHandler<String> reshandler = new BasicResponseHandler();
-        String result = client.execute(request, reshandler);
-        return result ;
-    }
-
-    //Post 방식일경우
-    private HttpPost makeHttpPost(String type, String product, String category, String url) {
-        HttpPost request = new HttpPost(url);
-        Vector<BasicNameValuePair> nameValue = new Vector<>();
-        nameValue.add(new BasicNameValuePair("type", type));
-        nameValue.add(new BasicNameValuePair("data", product));
-        nameValue.add(new BasicNameValuePair("category", category));
-        request.setEntity(makeEntity(nameValue));
-        return request ;
-    }
-
-    private HttpEntity makeEntity( Vector<BasicNameValuePair> nameValue ) {
-        HttpEntity result = null ;
+    public String POST(String url, JSONObject obj){
+        InputStream inputStream = null;
         try {
-            result = new UrlEncodedFormEntity(nameValue);
-        } catch (UnsupportedEncodingException e) {
+
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
+
+            // 2. make POST request to the given URL
+            HttpPost httpPost = new HttpPost(url);
+
+            String json = "";
+
+            // 3. build jsonObject
+            JSONObject jsonObject = obj;
+
+            // 4. convert JSONObject to JSON to String
+            json = jsonObject.toString();
+
+            // ** Alternative way to convert Person object to JSON string usin Jackson Lib
+            // ObjectMapper mapper = new ObjectMapper();
+            // json = mapper.writeValueAsString(person);
+
+            // 5. set json to StringEntity
+            StringEntity se = new StringEntity(json, HTTP.UTF_8);
+
+            // 6. set httpPost Entity
+            httpPost.setEntity(se);
+            // 7. Set some headers to inform server about the type of the content
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            // 8. Execute POST request to the given URL
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+
+            // 9. receive response as inputStream
+            inputStream = httpResponse.getEntity().getContent();
+
+            // 10. convert inputstream to string
+            if(inputStream != null)
+                mStrJson = convertInputStreamToString(inputStream);
+            else
+                mStrJson = "Did not work!";
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return result ;
+
+        Log.d("AA",mStrJson);
+
+        try {
+            JSONObject object = new JSONObject(mStrJson);
+            JSONArray data = new JSONArray(object.getString("data"));
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject insideObject = data.getJSONObject(i);
+
+                Entry retail = new Entry(new Float(insideObject.getString("price_r")).floatValue() ,i);
+                Entry wholesale = new Entry(new Float(insideObject.getString("price_w")).floatValue(), i);
+
+                valsComp1.add(wholesale);
+                valsComp2.add(retail);
+
+                unit_r = insideObject.getString("unit_r");
+                unit_w = insideObject.getString("unit_w");
+
+                xVals.add(insideObject.getString("price_date"));
+                grades.add(insideObject.getString("grade"));
+            }
+        } catch (JSONException e) {
+            Log.d("tag", "Parse Error");
+        }
+
+        // 11. return result
+        return mStrJson;
+    }
+
+    private String convertInputStreamToString(InputStream inputStream) throws IOException{
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream,"utf-8"));
+        String line = "";
+        String result = "";
+        while((line = bufferedReader.readLine()) != null)
+            result += line;
+
+        inputStream.close();
+        return result;
+
+    }
+
+    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            JSONObject obj = new JSONObject();
+            JSONObject data = new JSONObject();
+            try {
+                data.accumulate("sub_id", "11");
+                data.accumulate("region_si","서울");
+
+                obj.accumulate("type","result");
+                obj.accumulate("data",data);
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            }
+            Log.d("BB",obj.toString());
+            return POST(urls[0],obj);
+        }
     }
 
     @Override
@@ -111,8 +174,8 @@ public class ResultFragment extends Fragment {
         Bundle bundle = this.getArguments();
         String product_name = bundle.getString("product", "NULL");
 
-        TextView procut_textview = (TextView) view.findViewById(R.id.product);
-        procut_textview.setText(product_name);
+        TextView product_textview = (TextView) view.findViewById(R.id.product);
+        product_textview.setText(product_name);
 
         chart = (LineChart) view.findViewById(R.id.chart);
 
@@ -129,6 +192,8 @@ public class ResultFragment extends Fragment {
 
         Button button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
         Button button_retail = (Button) view.findViewById(R.id.button_retail);
+
+
 
         button_wholesale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +213,8 @@ public class ResultFragment extends Fragment {
 
                 LineData data = new LineData(xVals, dataSets);
                 data.setValueFormatter(new MyLabelFormatter());
+
+                chart.setDescription("단위 : " + unit_w);
                 chart.setData(data);
                 chart.invalidate(); // refresh
 
@@ -165,34 +232,15 @@ public class ResultFragment extends Fragment {
 
                 LineData data = new LineData(xVals, dataSets);
                 data.setValueFormatter(new MyLabelFormatter());
+
+                chart.setDescription("단위 : " + unit_r);
                 chart.setData(data);
                 chart.invalidate(); // refresh
-
             }
         });
 
-        try {
-            JSONObject object = new JSONObject(mStrJson);
-            JSONArray data = new JSONArray(object.getString("data"));
+        new HttpAsyncTask().execute("http://tams2.info.tm:8000/price/");
 
-            if(object.getString("type").equals("result_screen"))
-                Log.d("TYPE","RESULT_SCREEN");
-
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject insideObject = data.getJSONObject(i);
-
-                Entry retail = new Entry(new Float(insideObject.getString("price_r")).floatValue() ,i);
-                Entry wholesale = new Entry(new Float(insideObject.getString("price_w")).floatValue(), i);
-
-                valsComp1.add(wholesale);
-                valsComp2.add(retail);
-
-                chart.setDescription("단위 : " + insideObject.getString("unit"));
-                xVals.add(insideObject.getString("price_date"));
-            }
-        } catch (JSONException e) {
-            Log.d("tag", "Parse Error");
-        }
 
 
         return view;
@@ -201,18 +249,11 @@ public class ResultFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**

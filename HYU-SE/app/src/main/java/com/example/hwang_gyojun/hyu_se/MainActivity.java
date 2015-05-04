@@ -54,7 +54,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public void fragmentReplace(int reqNewFragmentIndex) {
-
         Fragment newFragment = null;
 
         newFragment = getFragment(reqNewFragmentIndex);
@@ -66,7 +65,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         // Commit the transaction
         transaction.commit();
-
     }
 
     private Fragment getFragment(int idx) {
@@ -85,17 +83,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case FRAGMENT_GPS:
                 newFragment = new GpsFragment();
                 break;
-
         }
-
         return newFragment;
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
-
             case R.id.button_home:
                 mCurrentFragmentIndex = FRAGMENT_HOME;
                 fragmentReplace(mCurrentFragmentIndex);
@@ -112,13 +106,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 mCurrentFragmentIndex = FRAGMENT_GPS;
                 fragmentReplace(mCurrentFragmentIndex);
                 break;
-
         }
-
     }
 
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
+            db_open_helper.close();
             finish();
             return;
         }
