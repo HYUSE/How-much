@@ -5,7 +5,9 @@ import sys
 import xlrd
 from xlrd.sheet import ctype_text
 from price.models import *
-from datetime import datetime
+import dateutil.parser
+from datetime import date, timedelta, datetime
+import time
 
 def readExcel(current_date, type_rw):
     whole_list = list()
@@ -58,5 +60,7 @@ def insertDB(whole_list, type_rw):
                 item.unit_w = value['unit']
             item.save()
 
-insertDB(readExcel("20150429", "r"), "r")
-insertDB(readExcel("20150429", "w"), "w")
+now = date.today()
+now = "%d%02d%02d" % (now.year, now.month, now.day)
+insertDB(readExcel(now, "r"), "r")
+insertDB(readExcel(now, "w"), "w")

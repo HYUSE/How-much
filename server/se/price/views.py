@@ -17,7 +17,7 @@ def index(request):
 	if request_j["type"] == "home":
 		region_si = request_j["data"]["region_si"]
 		response_j = dict(data=list())
-		now = date.today() + timedelta(days=-3)
+		now = date.today()
 		now = "%d%02d%02d" % (now.year, now.month, now.day)
 		for data in request_j["data"]["sub_id"]:# data : {"sub_id":"91"}
 			items = Item.objects.filter(category__sub__id=data, region__name=region_si, price_date=dateutil.parser.parse(now))
