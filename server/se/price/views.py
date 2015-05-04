@@ -40,8 +40,8 @@ def index(request):
                     price_date = str(item.price_date)
                     price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
                     price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
-                    if len(price) != 0:
-                        response_j["data"].append(dict(grade=ssub.name, price=price))
+                if len(price) != 0:
+                    response_j["data"].append(dict(grade=ssub.name, price=price))
         return HttpResponse(json.dumps(response_j), content_type="application/json")
 
     if request_j["type"] == "auto_complete":
