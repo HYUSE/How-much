@@ -30,18 +30,51 @@ def index(request):
         ssubs = SSub.objects.filter(sub__id=request_j["data"]["sub_id"])
         for ssub in ssubs:
             price = list()
-            for i in range(5):
-                price = list()
-                delta = timedelta(days=-i)
-                now = date.today() + delta
-                now = "%d%02d%02d" % (now.year, now.month, now.day)
-                items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
-                for item in items:
-                    price_date = str(item.price_date)
-                    price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
-                    price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
-                if len(price) != 0:
-                    response_j["data"].append(dict(grade=ssub.name, price=price))
+            # server test data
+            now = "20150427"
+            items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            for item in items:
+                price_date = str(item.price_date)
+                price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+                price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            now = "20150428"
+            items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            for item in items:
+                price_date = str(item.price_date)
+                price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+                price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            now = "20150429"
+            items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            for item in items:
+                price_date = str(item.price_date)
+                price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+                price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            now = "20150430"
+            items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            for item in items:
+                price_date = str(item.price_date)
+                price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+                price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            now = "20150504"
+            items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            for item in items:
+                price_date = str(item.price_date)
+                price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+                price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            # server test data end
+            if len(price) != 0:
+                response_j["data"].append(dict(grade=ssub.name, price=price))
+            # for i in range(5):
+            #     delta = timedelta(days=-(4-i))
+            #     now = date.today() + delta
+            #     now = "%d%02d%02d" % (now.year, now.month, now.day)
+            #     items = Item.objects.filter(category=ssub, region__name=request_j["data"]["region_si"], price_date=dateutil.parser.parse(now))
+            #     for item in items:
+            #         price_date = str(item.price_date)
+            #         price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+            #         price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
+            # if len(price) != 0:
+            #     response_j["data"].append(dict(grade=ssub.name, price=price))
         return HttpResponse(json.dumps(response_j), content_type="application/json")
 
     if request_j["type"] == "auto_complete":

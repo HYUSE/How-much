@@ -54,7 +54,7 @@ def insertDB(whole_list, type_rw):
             ssub, _ = SSub.objects.get_or_create(name=value['ssub'], sub=sub)
             if type_rw == "r":
                 item = Item(price_r=value['price'], unit_r=value['unit'], price_date=datetime(int(value['year']), int(value['month']), int(value['day'])), region=region_si, category=ssub)
-            else:
+            elif type_rw == "w":
                 item, _ = Item.objects.get_or_create(price_date=datetime(int(value['year']), int(value['month']), int(value['day'])), region=region_si, category=ssub)
                 item.price_w = value['price']
                 item.unit_w = value['unit']
@@ -62,5 +62,15 @@ def insertDB(whole_list, type_rw):
 
 now = date.today()
 now = "%d%02d%02d" % (now.year, now.month, now.day)
+# server test data
+# insertDB(readExcel("20150430", "r"), "r")
+# insertDB(readExcel("20150430", "w"), "w")
+# insertDB(readExcel("20150429", "r"), "r")
+# insertDB(readExcel("20150429", "w"), "w")
+# insertDB(readExcel("20150428", "r"), "r")
+# insertDB(readExcel("20150428", "w"), "w")
+# insertDB(readExcel("20150427", "r"), "r")
+# insertDB(readExcel("20150427", "w"), "w")
+# server test data end
 insertDB(readExcel(now, "r"), "r")
 insertDB(readExcel(now, "w"), "w")
