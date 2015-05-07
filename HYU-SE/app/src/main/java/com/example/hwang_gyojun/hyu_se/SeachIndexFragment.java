@@ -99,13 +99,7 @@ public class SeachIndexFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ResultFragment newFragment = null;
-                try {
-                    newFragment = new ResultFragment();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                newFragment = new ResultFragment();
                 // replace fragment
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 

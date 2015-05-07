@@ -35,21 +35,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class ResultFragment extends Fragment {
     private LineChart chart;
-    private ArrayList<String> xVals;
-    private static String mStrJson;
-    private ArrayList<Entry> valsComp1;
-    private ArrayList<Entry> valsComp2;
+    private ArrayList<String> x_values;
+    private String result;
+    private ArrayList<LineDataSet> retail_data_set_list;
+    private ArrayList<LineDataSet> wholesale_data_set_list;
     private String unit_r;
     private String unit_w;
-    private ArrayList<String> grades;
 
-
-    public ResultFragment() throws JSONException, IOException {
-        valsComp1 = new ArrayList<Entry>();
-        valsComp2 = new ArrayList<Entry>();
+    public ResultFragment() {
+        retail_data_set_list = new ArrayList<LineDataSet>();
+        wholesale_data_set_list = new ArrayList<LineDataSet>();
     }
 
     public String POST(String url, JSONObject obj){
@@ -92,53 +91,27 @@ public class ResultFragment extends Fragment {
 
             // 10. convert inputstream to string
             if(inputStream != null)
-                mStrJson = convertInputStreamToString(inputStream);
+                result = convertInputStreamToString(inputStream);
             else
-                mStrJson = "Did not work!";
-
-        } catch (Exception e) {
+                result = "Did not work!";
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
-
-        Log.d("AA",mStrJson);
-
-        try {
-            JSONObject object = new JSONObject(mStrJson);
-            JSONArray data = new JSONArray(object.getString("data"));
-
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject insideObject = data.getJSONObject(i);
-
-                Entry retail = new Entry(new Float(insideObject.getString("price_r")).floatValue() ,i);
-                Entry wholesale = new Entry(new Float(insideObject.getString("price_w")).floatValue(), i);
-
-                valsComp1.add(wholesale);
-                valsComp2.add(retail);
-
-                unit_r = insideObject.getString("unit_r");
-                unit_w = insideObject.getString("unit_w");
-
-                xVals.add(insideObject.getString("price_date"));
-                grades.add(insideObject.getString("grade"));
-            }
-        } catch (JSONException e) {
-            Log.d("tag", "Parse Error");
-        }
-
-        // 11. return result
-        return mStrJson;
+        Log.d("Result",result);
+        return result;
     }
 
     private String convertInputStreamToString(InputStream inputStream) throws IOException{
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream,"utf-8"));
         String line = "";
         String result = "";
+
         while((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();
         return result;
-
     }
 
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
@@ -146,17 +119,19 @@ public class ResultFragment extends Fragment {
         protected String doInBackground(String... urls) {
             JSONObject obj = new JSONObject();
             JSONObject data = new JSONObject();
+
             try {
-                data.accumulate("sub_id", "11");
+                data.accumulate("sub_id", "2");
                 data.accumulate("region_si","서울");
 
                 obj.accumulate("type","result");
                 obj.accumulate("data",data);
-            } catch (JSONException e) {
+            }
+            catch (JSONException e) {
                 e.printStackTrace();
 
             }
-            Log.d("BB",obj.toString());
+
             return POST(urls[0],obj);
         }
     }
@@ -181,56 +156,47 @@ public class ResultFragment extends Fragment {
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(8f);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setValueFormatter(new MyLabelFormatter());
+        leftAxis.setTextSize(8f);
 
-        xVals = new ArrayList<String>();
+        x_values = new ArrayList<String>();
 
         Button button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
         Button button_retail = (Button) view.findViewById(R.id.button_retail);
 
-
-
         button_wholesale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LineDataSet setComp1 = new LineDataSet(valsComp1, "도매");
-                setComp1.setColor(getResources().getColor(R.color.material_blue_grey_800));
-                setComp1.setValueFormatter(new MyLabelFormatter());
                 ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                dataSets.add(setComp1);
-
-                LineDataSet setComp2 = new LineDataSet(valsComp2, "소매");
-                setComp2.setValueFormatter(new MyLabelFormatter());
-                setComp2.setColor(getResources().getColor(R.color.material_deep_teal_500));
-                dataSets.add(setComp2);
+                for (int i = 0; i < wholesale_data_set_list.size(); i++) {
+                    dataSets.add(wholesale_data_set_list.get(i));
+                }
 
 
-
-                LineData data = new LineData(xVals, dataSets);
+                LineData data = new LineData(x_values, dataSets);
                 data.setValueFormatter(new MyLabelFormatter());
 
                 chart.setDescription("단위 : " + unit_w);
                 chart.setData(data);
                 chart.invalidate(); // refresh
-
-
             }
         });
 
         button_retail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LineDataSet setComp2 = new LineDataSet(valsComp2, "소매");
-                setComp2.setValueFormatter(new MyLabelFormatter());
                 ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                dataSets.add(setComp2);
+                for (int i = 0; i < retail_data_set_list.size(); i++) {
+                    dataSets.add(retail_data_set_list.get(i));
+                }
 
-                LineData data = new LineData(xVals, dataSets);
+                LineData data = new LineData(x_values, dataSets);
                 data.setValueFormatter(new MyLabelFormatter());
 
                 chart.setDescription("단위 : " + unit_r);
@@ -239,11 +205,89 @@ public class ResultFragment extends Fragment {
             }
         });
 
-        new HttpAsyncTask().execute("http://tams2.info.tm:8000/price/");
+        try {
+            JSONObject obj = new JSONObject();
+            JSONObject data = new JSONObject();
 
+            data.accumulate("sub_id", "11");
+            data.accumulate("region_si","서울");
 
+            obj.accumulate("type","result");
+            obj.accumulate("data",data);
+            result = new PostJSON().returnResult();
+            while(!result.isEmpty()) {
+                wholesale();
+                retail();
+                break;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return view;
+    }
+
+    public void retail() {
+        try {
+            JSONObject object = new JSONObject(result);
+            JSONArray data = new JSONArray(object.getString("data"));
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject inside_object = data.getJSONObject(i);
+                JSONArray price = new JSONArray(inside_object.getString("price"));
+
+                ArrayList<Entry> retail_list = new ArrayList<Entry>();
+                for (int j = 0; j < price.length(); j++) {
+                    JSONObject price_object = price.getJSONObject(j);
+                    Entry retail = new Entry(new Float(price_object.getString("price_r")).floatValue() ,j);
+
+                    retail_list.add(retail);
+                    unit_r = price_object.getString("unit_r");
+                    if(x_values.size() != 5) {
+                        x_values.add(price_object.getString("date"));
+                        Log.d("ASDFASF",price_object.getString("date"));
+                    }
+                }
+
+                LineDataSet setComp = new LineDataSet(retail_list, inside_object.getString("grade"));
+                setComp.setValueFormatter(new MyLabelFormatter());
+                retail_data_set_list.add(setComp);
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void wholesale() {
+        try {
+            JSONObject object = new JSONObject(result);
+            JSONArray data = new JSONArray(object.getString("data"));
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject inside_object = data.getJSONObject(i);
+                JSONArray price = new JSONArray(inside_object.getString("price"));
+
+                ArrayList<Entry> wholesale_list = new ArrayList<Entry>();
+                for (int j = 0; j < price.length(); j++) {
+                    JSONObject price_object = price.getJSONObject(j);
+                    Entry wholesale = new Entry(new Float(price_object.getString("price_w")).floatValue() ,j);
+
+                    wholesale_list.add(wholesale);
+                    unit_w = price_object.getString("unit_w");
+
+                    if(x_values.size() != 4)
+                        x_values.add(price_object.getString("date"));
+                }
+
+                LineDataSet setComp = new LineDataSet(wholesale_list, inside_object.getString("grade"));
+                setComp.setValueFormatter(new MyLabelFormatter());
+                wholesale_data_set_list.add(setComp);
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
