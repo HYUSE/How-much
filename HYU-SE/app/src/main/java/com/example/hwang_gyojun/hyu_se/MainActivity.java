@@ -1,12 +1,13 @@
 package com.example.hwang_gyojun.hyu_se;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +17,7 @@ import android.widget.Button;
 import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener, GpsFragment.OnFragmentInteractionListener
+public class MainActivity extends FragmentActivity implements View.OnClickListener, GpsFragment.OnFragmentInteractionListener
                                                 , SeachIndexFragment.OnFragmentInteractionListener,ResultFragment.OnFragmentInteractionListener
                                                 , RetrieveFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener{
 
