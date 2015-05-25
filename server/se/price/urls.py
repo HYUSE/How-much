@@ -4,8 +4,12 @@ from django.conf.urls import include, url
 from . import views
 
 urlpatterns = [
-    # Examples:
-    # url(r'^$', 'se.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-    url(r'^$', views.index, name='index'),
+	url(r'^$', views.index, name='index'),
+	url(r'^auto_complete/$', views.auto_complete, name='auto_complete'),
+	url(r'^result/$', views.result, name='result'),
+	url(r'^category/$', views.category, name='category'),
+	url(r'^main/$', views.main, name='main'),
+	url(r'^sub/$', views.sub, name='sub'),
+	url(r'^home/$', views.home, name='home'),
+
 ]
