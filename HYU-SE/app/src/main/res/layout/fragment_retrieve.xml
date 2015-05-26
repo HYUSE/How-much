@@ -1,9 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hwang_gyojun.hyu_se.RetrieveFragment">
+    tools:context="com.example.hwang_gyojun.hyu_se.RetrieveFragment"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <SearchView
         android:layout_width="wrap_content"
@@ -13,4 +13,17 @@
         android:iconifiedByDefault="true"
         android:showAsAction="always"
         />
-</FrameLayout>
+
+    <ScrollView
+        android:layout_marginLeft="20dp"
+        android:layout_width="300dp"
+        android:layout_height="200dp">
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
