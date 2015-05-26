@@ -20,22 +20,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class ResultFragment extends Fragment {
     private LineChart chart;
@@ -45,95 +34,12 @@ public class ResultFragment extends Fragment {
     private ArrayList<LineDataSet> wholesale_data_set_list;
     private String unit_r;
     private String unit_w;
+    private PostJSON post_json;
 
     public ResultFragment() {
         retail_data_set_list = new ArrayList<LineDataSet>();
         wholesale_data_set_list = new ArrayList<LineDataSet>();
-    }
-
-    public String POST(String url, JSONObject obj){
-        InputStream inputStream = null;
-        try {
-
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-            HttpPost httpPost = new HttpPost(url);
-
-            String json = "";
-
-            // 3. build jsonObject
-            JSONObject jsonObject = obj;
-
-            // 4. convert JSONObject to JSON to String
-            json = jsonObject.toString();
-
-            // ** Alternative way to convert Person object to JSON string usin Jackson Lib
-            // ObjectMapper mapper = new ObjectMapper();
-            // json = mapper.writeValueAsString(person);
-
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json, HTTP.UTF_8);
-
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-
-
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // 10. convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d("Result",result);
-        return result;
-    }
-
-    private String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream,"utf-8"));
-        String line = "";
-        String result = "";
-
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-    }
-
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            JSONObject obj = new JSONObject();
-            JSONObject data = new JSONObject();
-
-            try {
-                data.accumulate("sub_id", "2");
-                data.accumulate("region_si","서울");
-
-                obj.accumulate("type","result");
-                obj.accumulate("data",data);
-            }
-            catch (JSONException e) {
-                e.printStackTrace();
-
-            }
-
-            return POST(urls[0],obj);
-        }
+        post_json = new PostJSON();
     }
 
     @Override
@@ -147,10 +53,11 @@ public class ResultFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         Bundle bundle = this.getArguments();
-        String product_name = bundle.getString("product", "NULL");
+        String name = bundle.getString("name", "NULL");
+        String sub_id = bundle.getString("sub_id","NULL");
 
         TextView product_textview = (TextView) view.findViewById(R.id.product);
-        product_textview.setText(product_name);
+        product_textview.setText(name);
 
         chart = (LineChart) view.findViewById(R.id.chart);
 
@@ -209,12 +116,15 @@ public class ResultFragment extends Fragment {
             JSONObject obj = new JSONObject();
             JSONObject data = new JSONObject();
 
-            data.accumulate("sub_id", "11");
+            data.accumulate("sub_id", sub_id);
             data.accumulate("region_si","서울");
 
             obj.accumulate("type","result");
             obj.accumulate("data",data);
-            result = new PostJSON().returnResult();
+
+            post_json.sendJson(obj.toString());
+            result = post_json.returnResult();
+
             while(!result.isEmpty()) {
                 wholesale();
                 retail();
@@ -245,7 +155,6 @@ public class ResultFragment extends Fragment {
                     unit_r = price_object.getString("unit_r");
                     if(x_values.size() != 5) {
                         x_values.add(price_object.getString("date"));
-                        Log.d("ASDFASF",price_object.getString("date"));
                     }
                 }
 
@@ -257,6 +166,7 @@ public class ResultFragment extends Fragment {
         catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     public void wholesale() {

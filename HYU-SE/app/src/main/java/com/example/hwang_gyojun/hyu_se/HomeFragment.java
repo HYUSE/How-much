@@ -1,7 +1,6 @@
 package com.example.hwang_gyojun.hyu_se;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import org.json.JSONException;
-
-import java.io.IOException;
 
 import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
 
@@ -59,7 +54,7 @@ public class HomeFragment extends Fragment {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("product", list_adapter.getItem(position));
+                bundle.putString("name", list_adapter.getItem(position));
                 newFragment.setArguments(bundle);
 
                 transaction.replace(fragment_layout, newFragment);

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,11 +48,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         db_open_helper = db_open_helper.open();
 
 
-
         mCurrentFragmentIndex = FRAGMENT_HOME;
 
         fragmentReplace(mCurrentFragmentIndex);
     }
+
 
     public void fragmentReplace(int reqNewFragmentIndex) {
         Fragment newFragment = null;
@@ -108,8 +109,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
         }
     }
-
+/*
     public void onBackPressed() {
+
         if (doubleBackToExitPressedOnce) {
             db_open_helper.close();
             finish();
@@ -122,11 +124,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
-
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

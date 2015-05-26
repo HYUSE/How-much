@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,14 +28,17 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 
-public class RetrieveFragment extends Fragment {
+import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
+
+public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemClickListener {
     private OnFragmentInteractionListener mListener;
+    private ListView list;
+    private AutoCompleteAdapter adapter;
+    private AutoCompleteTextView auto_search;
     private SearchView searchView;
-
-    public RetrieveFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class RetrieveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         final int[] length = {0};
         final View view = inflater.inflate(R.layout.fragment_retrieve, container, false);
         searchView = (SearchView) view.findViewById(R.id.search_view);
@@ -82,13 +87,37 @@ public class RetrieveFragment extends Fragment {
                     if(jsonArray.length() != 0) {
                         linearLayout.removeAllViews();
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject c = jsonArray.getJSONObject(i);
+                            final JSONObject c = jsonArray.getJSONObject(i);
                             c.getString("name");
                             TextView textView = new TextView(getActivity());
                             textView.setText(c.getString("name") + "("+c.getString("sub_id")+")");
                             textView.setHeight(70);
                             textView.setWidth(500);
-                            TextView bar = new TextView(getActivity());
+                            textView.setTextSize(17);
+                            textView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ResultFragment newFragment = new ResultFragment();
+
+                                    // replace fragment
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+                                    Bundle bundle = new Bundle();
+
+                                    try {
+                                        bundle.putString("name", c.getString("name"));
+                                        bundle.putString("sub_id", c.getString("sub_id"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    newFragment.setArguments(bundle);
+
+                                    transaction.replace(fragment_layout, newFragment);
+                                    transaction.commit();
+
+                                }
+                            });
+                            //TextView bar = new TextView(getActivity());
                             linearLayout.addView(textView);
                         }
                     }
@@ -103,6 +132,15 @@ public class RetrieveFragment extends Fragment {
         });
 
         /* haryeong code end */
+/*
+        View view = inflater.inflate(R.layout.fragment_retrieve, container, false);
+        list = (ListView) view.findViewById(R.id.retrieve_list);
+
+        auto_search = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextView);
+        adapter =  new AutoCompleteAdapter(getActivity(),android.R.layout.simple_list_item_1);
+        auto_search.setAdapter(adapter);
+        auto_search.setOnItemClickListener(this);
+*/
 
         return view;
     }
@@ -123,7 +161,30 @@ public class RetrieveFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+/*
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        RetrieveItem item = (RetrieveItem) parent.getItemAtPosition(position);
 
+        ResultFragment newFragment = new ResultFragment();
+
+        // replace fragment
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("name", item.getName());
+        bundle.putString("sub_id", item.getSubID());
+        newFragment.setArguments(bundle);
+
+        transaction.replace(fragment_layout, newFragment);
+
+        InputMethodManager imm= (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(auto_search.getWindowToken(), 0);
+
+        // Commit the transaction
+        transaction.commit();
+    }
+*/
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -170,5 +231,5 @@ public class RetrieveFragment extends Fragment {
         while(end[0] == 1){}
         return responseString[0];
     }
-/*haryeong code end*/
+    /*haryeong code end*/
 }
