@@ -31,18 +31,26 @@ public class HomeList {
         }
     }
 
-    ArrayList<HomeData> x;
+    ArrayList<HomeData> hdatas;
 
     HomeList(){
-        x = null;
+        hdatas = null;
     }
-
+    HomeList(String test){
+        addList("test1");
+        addList("test2");
+        addList("test3");
+        addList("test4");
+    }
+    void getdatas(){
+        //내부 DB목록을 읽어서 서버로 요청한 다음 addList를 해줍니다.
+    }
     void addList(String data){
-        x.add(new HomeData(data,data,data));
+        hdatas.add(new HomeData(data,data,data));
     }
 
     String[] readElem(int i){
-        HomeData d = x.get(i);
+        HomeData d = hdatas.get(i);
         String d1 = d.getData1();
         String d2 = d.getGrade();
         String d3 = d.getName();

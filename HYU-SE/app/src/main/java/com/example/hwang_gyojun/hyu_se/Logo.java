@@ -18,5 +18,6 @@ public class Logo extends Activity {
         Intent intent=new Intent(this,Gpsinfo.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        //finish();
     }
 }
