@@ -22,14 +22,12 @@ import java.util.concurrent.ExecutionException;
  * Created by hwang-gyojun on 2015. 5. 4..
  */
 public class PostJSON {
-    private String url = "http://tams2.info.tm:8000/price/";
-    private HttpAsyncTask http;
+    private String url = "http://bear.3dwise.com:8000/price/";
     private String result;
 
-    public PostJSON() {
-        http = new HttpAsyncTask();
+    public void sendJson(String json) {
         try {
-            result = http.execute(url).get();
+            result = new HttpAsyncTask().execute(json).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -41,7 +39,7 @@ public class PostJSON {
         return result;
     }
 
-    public String POST(String url, JSONObject obj){
+    public String POST(String json){
         InputStream inputStream = null;
         try {
 
@@ -50,14 +48,6 @@ public class PostJSON {
 
             // 2. make POST request to the given URL
             HttpPost httpPost = new HttpPost(url);
-
-            String json = "";
-
-            // 3. build jsonObject
-            JSONObject jsonObject = obj;
-
-            // 4. convert JSONObject to JSON to String
-            json = jsonObject.toString();
 
             // ** Alternative way to convert Person object to JSON string usin Jackson Lib
             // ObjectMapper mapper = new ObjectMapper();
@@ -106,23 +96,8 @@ public class PostJSON {
 
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
-        protected String doInBackground(String... urls) {
-            JSONObject obj = new JSONObject();
-            JSONObject data = new JSONObject();
-
-            try {
-                data.accumulate("sub_id", "2");
-                data.accumulate("region_si","서울");
-
-                obj.accumulate("type","result");
-                obj.accumulate("data",data);
-            }
-            catch (JSONException e) {
-                e.printStackTrace();
-
-            }
-
-            return POST(urls[0], obj);
+        protected String doInBackground(String... objs) {
+            return POST(objs[0]);
         }
     }
 }

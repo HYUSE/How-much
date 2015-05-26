@@ -5,21 +5,31 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
-public class RetrieveFragment extends Fragment {
+import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
+
+public class RetrieveFragment extends Fragment implements AdapterView.OnItemClickListener {
     private OnFragmentInteractionListener mListener;
-    private SearchView searchView;
-
-    public RetrieveFragment() {
-        // Required empty public constructor
-    }
+    private ListView list;
+    private AutoCompleteAdapter adapter;
+    private AutoCompleteTextView auto_search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +41,13 @@ public class RetrieveFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_retrieve, container, false);
-        searchView = (SearchView) view.findViewById(R.id.search_view);
-        searchView.setIconified(false);
+        list = (ListView) view.findViewById(R.id.retrieve_list);
+
+        auto_search = (AutoCompleteTextView) view.findViewById(R.id.autoCompleteTextView);
+        adapter =  new AutoCompleteAdapter(getActivity(),android.R.layout.simple_list_item_1);
+        auto_search.setAdapter(adapter);
+        auto_search.setOnItemClickListener(this);
+
         return view;
     }
 
@@ -51,6 +66,29 @@ public class RetrieveFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        RetrieveItem item = (RetrieveItem) parent.getItemAtPosition(position);
+
+        ResultFragment newFragment = new ResultFragment();
+
+        // replace fragment
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("name", item.getName());
+        bundle.putString("sub_id", item.getSubID());
+        newFragment.setArguments(bundle);
+
+        transaction.replace(fragment_layout, newFragment);
+
+        InputMethodManager imm= (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(auto_search.getWindowToken(), 0);
+
+        // Commit the transaction
+        transaction.commit();
     }
 
     /**
