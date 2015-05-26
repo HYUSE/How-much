@@ -33,8 +33,13 @@ def readExcel(current_date, type_rw):
         if sheet.cell(row_idx, 4).value:
             sub = sheet.cell(row_idx, 4).value.encode('utf-8')
             # unit parsing
-            unit = sub[int(sub.index('('))+1:int(sub.index(')'))]
-            sub = sub[0:int(sub.index('('))]
+            if sub.find(')(') == -1 :
+                unit = sub[int(sub.index('('))+1:int(sub.index(')'))]
+                sub = sub[0:int(sub.index('('))]
+            else :
+                temp = sub[int(sub.find(')'))+1:]
+                unit = temp[1:len(temp)-1]
+                sub = sub[0:int(sub.index('('))]
         ssub = sheet.cell(row_idx, 5).value
         year = sheet.cell(row_idx, 6).value
         month = sheet.cell(row_idx, 7).value
@@ -63,14 +68,14 @@ def insertDB(whole_list, type_rw):
 now = date.today()
 now = "%d%02d%02d" % (now.year, now.month, now.day)
 # server test data
-# insertDB(readExcel("20150430", "r"), "r")
-# insertDB(readExcel("20150430", "w"), "w")
-# insertDB(readExcel("20150429", "r"), "r")
-# insertDB(readExcel("20150429", "w"), "w")
-# insertDB(readExcel("20150428", "r"), "r")
-# insertDB(readExcel("20150428", "w"), "w")
-# insertDB(readExcel("20150427", "r"), "r")
-# insertDB(readExcel("20150427", "w"), "w")
+insertDB(readExcel("20150430", "r"), "r")
+insertDB(readExcel("20150430", "w"), "w")
+insertDB(readExcel("20150429", "r"), "r")
+insertDB(readExcel("20150429", "w"), "w")
+insertDB(readExcel("20150428", "r"), "r")
+insertDB(readExcel("20150428", "w"), "w")
+insertDB(readExcel("20150427", "r"), "r")
+insertDB(readExcel("20150427", "w"), "w")
 # server test data end
-insertDB(readExcel(now, "r"), "r")
-insertDB(readExcel(now, "w"), "w")
+#insertDB(readExcel(now, "r"), "r")
+#insertDB(readExcel(now, "w"), "w")
