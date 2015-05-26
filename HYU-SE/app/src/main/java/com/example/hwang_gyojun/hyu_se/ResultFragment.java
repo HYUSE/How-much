@@ -2,11 +2,9 @@ package com.example.hwang_gyojun.hyu_se;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +33,8 @@ public class ResultFragment extends Fragment {
     private String unit_r;
     private String unit_w;
     private PostJSON post_json;
+    private Button button_wholesale;
+    private Button button_retail;
 
     public ResultFragment() {
         retail_data_set_list = new ArrayList<LineDataSet>();
@@ -74,41 +74,20 @@ public class ResultFragment extends Fragment {
 
         x_values = new ArrayList<String>();
 
-        Button button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
-        Button button_retail = (Button) view.findViewById(R.id.button_retail);
+        button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
+        button_retail = (Button) view.findViewById(R.id.button_retail);
 
         button_wholesale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                for (int i = 0; i < wholesale_data_set_list.size(); i++) {
-                    dataSets.add(wholesale_data_set_list.get(i));
-                }
-
-
-                LineData data = new LineData(x_values, dataSets);
-                data.setValueFormatter(new MyLabelFormatter());
-
-                chart.setDescription("단위 : " + unit_w);
-                chart.setData(data);
-                chart.invalidate(); // refresh
+                drawWholesale();
             }
         });
 
         button_retail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                for (int i = 0; i < retail_data_set_list.size(); i++) {
-                    dataSets.add(retail_data_set_list.get(i));
-                }
-
-                LineData data = new LineData(x_values, dataSets);
-                data.setValueFormatter(new MyLabelFormatter());
-
-                chart.setDescription("단위 : " + unit_r);
-                chart.setData(data);
-                chart.invalidate(); // refresh
+                drawRetail();
             }
         });
 
@@ -135,6 +114,11 @@ public class ResultFragment extends Fragment {
             e.printStackTrace();
         }
 
+        if(wholesale_data_set_list.size() == 0)
+            button_wholesale.setVisibility(View.GONE);
+        if(retail_data_set_list.size() == 0)
+            button_retail.setVisibility(View.GONE);
+
         return view;
     }
 
@@ -149,6 +133,12 @@ public class ResultFragment extends Fragment {
                 ArrayList<Entry> retail_list = new ArrayList<Entry>();
                 for (int j = 0; j < price.length(); j++) {
                     JSONObject price_object = price.getJSONObject(j);
+
+                    if(price_object.getString("price_r").equals("null")) {
+                        continue;
+                    }
+
+
                     Entry retail = new Entry(new Float(price_object.getString("price_r")).floatValue() ,j);
 
                     retail_list.add(retail);
@@ -160,7 +150,8 @@ public class ResultFragment extends Fragment {
 
                 LineDataSet setComp = new LineDataSet(retail_list, inside_object.getString("grade"));
                 setComp.setValueFormatter(new MyLabelFormatter());
-                retail_data_set_list.add(setComp);
+                if(retail_list.size() > 0)
+                    retail_data_set_list.add(setComp);
             }
         }
         catch (JSONException e) {
@@ -181,23 +172,69 @@ public class ResultFragment extends Fragment {
                 ArrayList<Entry> wholesale_list = new ArrayList<Entry>();
                 for (int j = 0; j < price.length(); j++) {
                     JSONObject price_object = price.getJSONObject(j);
+
+                    if(price_object.getString("price_w").equals("null")) {
+                        continue;
+                    }
+
+
                     Entry wholesale = new Entry(new Float(price_object.getString("price_w")).floatValue() ,j);
 
                     wholesale_list.add(wholesale);
                     unit_w = price_object.getString("unit_w");
 
-                    if(x_values.size() != 4)
+                    if(x_values.size() != 5)
                         x_values.add(price_object.getString("date"));
                 }
 
                 LineDataSet setComp = new LineDataSet(wholesale_list, inside_object.getString("grade"));
                 setComp.setValueFormatter(new MyLabelFormatter());
-                wholesale_data_set_list.add(setComp);
+                if(wholesale_list.size() > 0)
+                    wholesale_data_set_list.add(setComp);
             }
         }
         catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void drawRetail() {
+        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+        if(retail_data_set_list.size() == 0)
+            button_retail.setVisibility(View.GONE);
+        else
+            button_retail.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < retail_data_set_list.size(); i++) {
+            dataSets.add(retail_data_set_list.get(i));
+        }
+
+        LineData data = new LineData(x_values, dataSets);
+        data.setValueFormatter(new MyLabelFormatter());
+
+        chart.setDescription("단위 : " + unit_r);
+        chart.setData(data);
+        chart.invalidate();
+    }
+
+    public void drawWholesale() {
+        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+        if(wholesale_data_set_list.size() == 0)
+            button_wholesale.setVisibility(View.GONE);
+        else
+            button_wholesale.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < wholesale_data_set_list.size(); i++) {
+            dataSets.add(wholesale_data_set_list.get(i));
+        }
+
+
+        LineData data = new LineData(x_values, dataSets);
+        data.setValueFormatter(new MyLabelFormatter());
+
+        chart.setDescription("단위 : " + unit_w);
+        chart.setData(data);
+        chart.invalidate();
     }
 
     @Override

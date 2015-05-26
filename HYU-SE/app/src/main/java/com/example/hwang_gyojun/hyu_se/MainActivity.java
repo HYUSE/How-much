@@ -1,17 +1,15 @@
 package com.example.hwang_gyojun.hyu_se;
 
-import android.database.Cursor;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 
 import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
@@ -26,8 +24,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     public final static int FRAGMENT_SEARCH_INDEX = 1;
     public final static int FRAGMENT_RETRIEVE = 2;
     public final static int FRAGMENT_GPS = 3;
-    private boolean doubleBackToExitPressedOnce;
-
+    private boolean keyboard_close;
     private DBOpenHelper db_open_helper;
 
     @Override
@@ -46,7 +43,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         db_open_helper = new DBOpenHelper(this);
         db_open_helper = db_open_helper.open();
-
+        keyboard_close = false;
 
         mCurrentFragmentIndex = FRAGMENT_HOME;
 
@@ -55,6 +52,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 
     public void fragmentReplace(int reqNewFragmentIndex) {
+        if(keyboard_close) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(findViewById(R.id.autoCompleteTextView).getWindowToken(), 0);
+            keyboard_close = false;
+        }
+
         Fragment newFragment = null;
 
         newFragment = getFragment(reqNewFragmentIndex);
@@ -63,7 +66,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         transaction.replace(fragment_layout, newFragment);
-
         // Commit the transaction
         transaction.commit();
     }
@@ -102,6 +104,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case R.id.button_retrieve:
                 mCurrentFragmentIndex = FRAGMENT_RETRIEVE;
                 fragmentReplace(mCurrentFragmentIndex);
+                keyboard_close = true;
                 break;
             case R.id.button_gps:
                 mCurrentFragmentIndex = FRAGMENT_GPS;
@@ -109,26 +112,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 break;
         }
     }
-/*
-    public void onBackPressed() {
 
-        if (doubleBackToExitPressedOnce) {
-            db_open_helper.close();
-            finish();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce = false;
-            }
-        }, 2000);
-    }
-*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

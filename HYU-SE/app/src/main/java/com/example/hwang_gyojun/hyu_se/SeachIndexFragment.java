@@ -1,26 +1,25 @@
 package com.example.hwang_gyojun.hyu_se;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
 
@@ -33,7 +32,7 @@ public class SeachIndexFragment extends Fragment {
     private ListView ssub_category;
     private ArrayAdapter<RetrieveItem> ssub_adapter;
     private PostJSON post_json;
-
+    private boolean doubleBackToExitPressedOnce;
     private OnFragmentInteractionListener mListener;
 
     public SeachIndexFragment() {
@@ -99,8 +98,6 @@ public class SeachIndexFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-//                sub_adapter.add("AA");
             }
         });
 
@@ -125,8 +122,6 @@ public class SeachIndexFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //              ssub_adapter.add("BB");
             }
         });
 
@@ -147,13 +142,15 @@ public class SeachIndexFragment extends Fragment {
                 newFragment.setArguments(bundle);
 
                 transaction.replace(fragment_layout, newFragment);
+                transaction.addToBackStack(null);
 
                 // Commit the transaction
                 transaction.commit();
+                FragmentManager fm = getActivity().getFragmentManager();
+                Log.d("Count", "" + fm.getBackStackEntryCount());
+
             }
         });
-
-//        main_adapter.add("CC");
 
         JSONObject object = null;
         try {
@@ -168,6 +165,36 @@ public class SeachIndexFragment extends Fragment {
             e.printStackTrace();
         }
 
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        if (doubleBackToExitPressedOnce) {
+                            getActivity().finish();
+                            return true;
+                        }
+
+                        doubleBackToExitPressedOnce = true;
+                        Toast.makeText(getActivity(), "한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+
+                        new Handler().postDelayed(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                doubleBackToExitPressedOnce = false;
+                            }
+                        }, 2000);
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         return view;
     }
