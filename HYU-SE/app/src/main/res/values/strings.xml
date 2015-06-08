@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+<<<<<<< HEAD
 
     <string-array name="region_do_array">
         <item>경기</item>
@@ -20,5 +21,26 @@
         <item>수원</item>
         <item>시흥</item>
         <item>음어</item>
+=======
+    <string name="logo_img">Logo_img</string>
+    <string name="logo_title">Logo_title</string>
+
+    <string-array name="do_list">
+        <item>서울시</item>
+        <item>경기도</item>
+        <item>강원도</item>
+        <item>충청도</item>
+        <item>전라도</item>
+        <item>경상도</item>
+    </string-array>
+
+    <string-array name="si_list">
+        <item>서울시</item>
+        <item>경기도</item>
+        <item>강원도</item>
+        <item>충청도</item>
+        <item>전라도</item>
+        <item>경상도</item>
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
     </string-array>
 </resources>

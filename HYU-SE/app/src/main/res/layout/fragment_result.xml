@@ -9,6 +9,7 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+<<<<<<< HEAD
         android:layout_gravity="center_horizontal|top" >
 
         <TextView
@@ -18,10 +19,14 @@
             android:text="Hello Result"
             android:id="@+id/textView2"
             android:layout_gravity="center_horizontal" />
+=======
+        android:layout_gravity="left|top">
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
+<<<<<<< HEAD
             android:layout_height="wrap_content" >
 
             <Spinner
@@ -35,30 +40,58 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/spinner2" />
+=======
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner2"
+                android:layout_weight="1" />
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
+<<<<<<< HEAD
                 android:id="@+id/textView3" />
+=======
+                android:id="@+id/product" />
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
+<<<<<<< HEAD
             android:layout_width="wrap_content"
+=======
+            android:layout_width="match_parent"
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
             android:layout_height="wrap_content">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="도매"
+<<<<<<< HEAD
                 android:id="@+id/button2" />
+=======
+                android:id="@+id/button_wholesale" />
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="소매"
+<<<<<<< HEAD
                 android:id="@+id/button3" />
         </LinearLayout>
 
@@ -70,4 +103,15 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+=======
+                android:id="@+id/button_retail"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+>>>>>>> 9585fe61db5908631cd92bf80873104f4835f8e9
 </FrameLayout>
