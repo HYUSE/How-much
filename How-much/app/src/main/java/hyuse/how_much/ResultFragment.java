@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -47,6 +45,8 @@ public class ResultFragment extends Fragment {
     private CheckBox button_preference;
     private Spinner spinner_do;
     private Spinner spinner_si;
+    private ArrayAdapter<CharSequence> do_adapter;
+    private ArrayAdapter<CharSequence> si_adapter;
 
     /* Kyojun Hwang  code */
     public ResultFragment() {
@@ -116,23 +116,67 @@ public class ResultFragment extends Fragment {
             }
         });
 
-        ArrayAdapter<CharSequence> do_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.do_list, android.R.layout.simple_spinner_item);
-        do_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_do.setAdapter(do_adapter);
-        spinner_do.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                (String)adapterView.getItemAtPosition(position)
-            }
-        });
-
-        ArrayAdapter<CharSequence> si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_list, android.R.layout.simple_spinner_item);
+//        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_list, android.R.layout.simple_spinner_item);
         si_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_si.setAdapter(si_adapter);
         spinner_si.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                try {
+                    String region = (String) adapterView.getItemAtPosition(position);
 
+                    post_json.setType("result");
+                    post_json.send(sub_id, region);
+                    result = post_json.returnResult();
+                    while (result == null) {
+                        result = post_json.returnResult();
+                    }
+
+                    retail();
+                    wholesale();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        do_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.do_list, android.R.layout.simple_spinner_item);
+        do_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_do.setAdapter(do_adapter);
+        spinner_do.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                switch ((int)id){
+                    case 0:
+                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
+                                android.R.layout.simple_spinner_item);
+                        break;
+                    case 1:
+                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_031,
+                                android.R.layout.simple_spinner_item);
+                        break;
+                    case 2:
+                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_033,
+                                android.R.layout.simple_spinner_item);
+                        break;
+                    case 3:
+                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_041,
+                                android.R.layout.simple_spinner_item);
+                        break;
+                    case 4:
+                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_063,
+                                android.R.layout.simple_spinner_item);
+                        break;
+                    case 5:
+                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_055,
+                                android.R.layout.simple_spinner_item);
+                        break;
+
+                    default:
+                }
+                si_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner_si.setAdapter(si_adapter);
             }
         });
 
