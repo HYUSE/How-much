@@ -168,11 +168,17 @@ public class SeachIndexFragment extends Fragment {
                 try {
                     object = new JSONObject(getCategory(clicked_item.getSubID(), "sub"));
                     JSONArray data = object.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        RetrieveItem item = new RetrieveItem(data.getJSONObject(i).getString("name"),data.getJSONObject(i).getString("sub_id"));
-                        ssub_adapter.add(item);
+                    if(data.length()!=0) {
+                        for (int i = 0; i < data.length(); i++) {
+                            RetrieveItem item = new RetrieveItem(data.getJSONObject(i).getString("name"), data.getJSONObject(i).getString("sub_id"));
+                            ssub_adapter.add(item);
+                        }
+                        ssub_category.setAdapter(new RetrieveItemAdapter(getActivity(), R.layout.custom_retrieve_item, ssub_adapter));
                     }
-                    ssub_category.setAdapter(new RetrieveItemAdapter(getActivity(), R.layout.custom_retrieve_item, ssub_adapter));
+                    else {
+                        Toast.makeText(,"데이터가 존재하지 않습니다.",Toast.LENGTH_LONG);
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
