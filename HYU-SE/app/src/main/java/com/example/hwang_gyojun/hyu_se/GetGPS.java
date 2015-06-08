@@ -56,13 +56,10 @@ public class GetGPS implements LocationListener {
         }
         if(list.size() > 0){
             Address addr = list.get(0);
-            address = addr.getAdminArea() + " ";
-            if(addr.getLocality() != null){
-                address += addr.getLocality();
-            }
-            else{
-                address += addr.getSubLocality();
-            }
+            address = addr.getAdminArea() + " "
+                    + addr.getLocality() + " "
+                    + addr.getSubLocality() +" "
+                    + addr.getThoroughfare();
         }
         return address;
     }
