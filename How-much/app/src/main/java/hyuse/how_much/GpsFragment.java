@@ -42,6 +42,7 @@ public class GpsFragment extends Fragment {
         si_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         si_spinner.setAdapter(si_adapter);
 
+
         return view;
     }
 

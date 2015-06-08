@@ -18,11 +18,12 @@ public class DBOpenHelper {
     private DatabaseHelper db_helper;
     private Context context;
 
-    /* Kyojun Hwang  code */
+    /* Kyojun Hwang code */
     private class DatabaseHelper extends SQLiteOpenHelper {
         private String user =
                 "create table user("
-                        + "region );";
+                        + "region_do text,"
+                        + "region_si text not null);";
 
         private String preference =
                 "create table preference("
@@ -68,6 +69,16 @@ public class DBOpenHelper {
         return this;
     }
 
+    public void insertRegion(String region_do, String region_si) {
+        Cursor cursor = db.rawQuery("SELECT * FROM user", null);
+        if(cursor.moveToNext()) {
+            updateRegion(region_do, region_si);
+        }
+        else {
+            db.execSQL("INSERT INTO user VALUES (" + region_do + ", '" + region_si + "')");
+        }
+    }
+
     public void insertPreference(String item_id, String item_name) {
         Cursor cursor = db.rawQuery("SELECT item_id FROM preference WHERE item_id = " + item_id, null);
         if(cursor.moveToNext()) {
@@ -86,10 +97,6 @@ public class DBOpenHelper {
             db.execSQL("INSERT INTO num_of_search VALUES (" + item_id + ", '" + item_name + "', " + 0 + ")");
     }
 
-    public void insertRegion() {
-
-    }
-
     public void updateSearch(String item_id) {
         Cursor cursor = db.rawQuery("SELECT count FROM num_of_search WHERE item_id = " + item_id, null);
         if(!cursor.moveToNext())
@@ -97,6 +104,15 @@ public class DBOpenHelper {
 
         db.execSQL("UPDATE num_of_search SET count = " + (cursor.getInt(0) + 1)
                     +" WHERE item_id = " + item_id);
+    }
+
+    public void updateRegion(String region_do, String region_si) {
+        Cursor cursor = db.rawQuery("SELECT * FROM user", null);
+        if(!cursor.moveToNext())
+            return;
+
+        db.execSQL("UPDATE user SET region_do = " + region_do
+                +", region_si = " + region_si);
     }
 
     public void deletePreference(String item_id) {
@@ -155,5 +171,5 @@ public class DBOpenHelper {
     public void close(){
         db.close();
     }
-    /* Kyojun Hwang  code end */
+    /* Kyojun Hwang code end */
 }
