@@ -2,6 +2,8 @@ package com.example.hwang_gyojun.hyu_se;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -49,7 +51,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         db_open_helper = db_open_helper.open();
         keyboard_close = false;
 
-        mCurrentFragmentIndex = FRAGMENT_HOME;
+        if(!false){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("현재 위치 설정");
+            alert.setMessage("현재 위치가 설정되어 있지 않습니다.\n 현재 위치를 설정 합니다.");
+            alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    fragmentReplace(FRAGMENT_GPS);
+                }
+            });
+            alert.show();
+        }
+        else{
+            mCurrentFragmentIndex = FRAGMENT_HOME;
+        }
 
         fragmentReplace(mCurrentFragmentIndex);
     }

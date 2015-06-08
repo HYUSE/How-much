@@ -19,6 +19,7 @@ public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ListView preference_list;
     private ArrayAdapter<String> list_adapter;
+    private HomeList homelist = new HomeList("test");
 
     public HomeFragment() {
         // Required empty public constructor
@@ -81,12 +82,19 @@ public class HomeFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
+    private void MakeList() {
+        //DB에서 읽어 오기
+
+
+    }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
