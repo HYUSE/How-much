@@ -18,7 +18,7 @@
     </string-array>
 
     <string-array name="si_02">
-        <item>서울 1</item>
+        <item>서울</item>
         <item>서울 2</item>
         <item>서울 3</item>
         <item>서울 4</item>
@@ -50,7 +50,7 @@
         <item>충청 3</item>
     </string-array>
     <string-array name="si_063">
-        <item>전라 1</item>
+        <item>광주</item>
         <item>전라 2</item>
         <item>전라 3</item>
     </string-array>

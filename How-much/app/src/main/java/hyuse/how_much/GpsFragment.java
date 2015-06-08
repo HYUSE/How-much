@@ -17,6 +17,7 @@ public class GpsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     public GetGPS GPS;
     public TextView GPS_info;
+    private DBOpenHelper db;
     Spinner si_spinner;
     Object do_name;
     Object si_name;
@@ -25,6 +26,7 @@ public class GpsFragment extends Fragment {
 
     public GpsFragment() {
         // Required empty public constructor
+        db = new DBOpenHelper(getActivity());
     }
 
     @Override
@@ -50,6 +52,9 @@ public class GpsFragment extends Fragment {
             public void onClick(View v) {
                 String addr = GPS.get_location();
                 GPS_info.setText(addr);
+
+                String[] region = addr.split(" ");
+                db.insertRegion(region[0], region[1]);
             }
         });
 
@@ -99,6 +104,7 @@ public class GpsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 si_name = parent.getSelectedItem();
                 GPS_info.setText(do_name+" "+si_name);
+                db.insertRegion((String) do_name, (String) si_name);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

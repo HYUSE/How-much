@@ -12,29 +12,31 @@ import android.util.Log;
  * Created by hwang-gyojun on 2015. 4. 30..
  */
 public class DBOpenHelper {
+    /* Kyojun Hwang code */
     private static final String DATABASE_NAME = "innerDB.db";
     private static final int DATABASE_VERSION = 1;
     public static SQLiteDatabase db;
     private DatabaseHelper db_helper;
     private Context context;
 
-    /* Kyojun Hwang code */
+
+    private String user =
+            "create table user("
+                    + "region_do text,"
+                    + "region_si text not null);";
+
+    private String preference =
+            "create table preference("
+                    + "item_id integer primary key, "
+                    + "item_name text not null);";
+
+    private String num_of_search =
+            "create table num_of_search("
+                    + "item_id integer primary key, "
+                    + "item_name text not null , "
+                    + "count integer default 0);";
+
     private class DatabaseHelper extends SQLiteOpenHelper {
-        private String user =
-                "create table user("
-                        + "region_do text,"
-                        + "region_si text not null);";
-
-        private String preference =
-                "create table preference("
-                        + "item_id integer primary key, "
-                        + "item_name text not null);";
-
-        private String num_of_search =
-                "create table num_of_search("
-                        + "item_id integer primary key, "
-                        + "item_name text not null , "
-                        + "count integer default 0);";
 
         // 생성자
         public DatabaseHelper(Context context, String name,
@@ -45,7 +47,7 @@ public class DBOpenHelper {
         // 최초 DB를 만들때 한번만 호출된다.
         @Override
         public void onCreate(SQLiteDatabase db) {
-
+            db.execSQL(user);
             db.execSQL(preference);
             db.execSQL(num_of_search);
         }
@@ -53,6 +55,7 @@ public class DBOpenHelper {
         // 버전이 업데이트 되었을 경우 DB를 다시 만들어 준다.
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS " + user);
             db.execSQL("DROP TABLE IF EXISTS " + preference);
             db.execSQL("DROP TABLE IF EXISTS " + num_of_search);
             onCreate(db);
@@ -66,6 +69,19 @@ public class DBOpenHelper {
     public DBOpenHelper open() throws SQLException {
         db_helper = new DatabaseHelper(context, DATABASE_NAME, null, DATABASE_VERSION);
         db = db_helper.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='user'", null);
+        if(!cursor.moveToNext())
+            db.execSQL(user);
+
+        cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='preference'", null);
+        if(!cursor.moveToNext())
+            db.execSQL(preference);
+
+        cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='num_of_search'", null);
+        if(!cursor.moveToNext())
+            db.execSQL(num_of_search);
+
         return this;
     }
 
@@ -75,7 +91,7 @@ public class DBOpenHelper {
             updateRegion(region_do, region_si);
         }
         else {
-            db.execSQL("INSERT INTO user VALUES (" + region_do + ", '" + region_si + "')");
+            db.execSQL("INSERT INTO user VALUES ('" + region_do + "', '" + region_si + "')");
         }
     }
 
@@ -111,8 +127,8 @@ public class DBOpenHelper {
         if(!cursor.moveToNext())
             return;
 
-        db.execSQL("UPDATE user SET region_do = " + region_do
-                +", region_si = " + region_si);
+        db.execSQL("UPDATE user SET region_do = '" + region_do
+                +"', region_si = '" + region_si + "'");
     }
 
     public void deletePreference(String item_id) {
@@ -152,7 +168,7 @@ public class DBOpenHelper {
 
         Cursor cursor =  db.rawQuery("SELECT * FROM user", null);
         if(cursor.moveToNext())
-            str += cursor.getString(0);
+            str = cursor.getString(0) + " " + cursor.getString(1);
 
         return str;
     }

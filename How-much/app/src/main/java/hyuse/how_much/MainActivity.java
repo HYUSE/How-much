@@ -9,6 +9,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
         db_open_helper = new DBOpenHelper(this);
         db_open_helper = db_open_helper.open();
         keyboard_close = false;
+
+        Log.d("AAAA", "ASFASDFASFASFASFASFA");
 
         if(!false){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
