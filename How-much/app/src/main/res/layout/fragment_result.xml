@@ -2,9 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.hwang_gyojun.hyu_se.ResultFragment">
+    tools:context="com.example.hwang_gyojun.hyu_se.ResultFragment"
+    android:padding="16dp"
+   >
 
     <!-- TODO: Update blank fragment layout -->
+
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,25 +18,175 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="50dp"
+            android:background="#FFFFFF"
+            android:paddingLeft="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:gravity="center_vertical"
+                android:id="@+id/product" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/button_preference" />
+        </LinearLayout>
+        <TextView
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="#888888"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="#ffffff"
+            >
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/wholesale"
+                android:background="@drawable/button_normal"
+                android:paddingLeft="16dp"
+                android:paddingTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wholesale_name"
+                    android:text="도매가"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wholesale_price"
+                    android:text=""
+                    android:textSize="16pt"
+                    android:gravity="right"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="원"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="단위:"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wholesale_unit"
+                    android:text=""
+                    android:textSize="12pt"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/retail"
+                android:background="@drawable/button_normal"
+                android:paddingLeft="16dp"
+                android:paddingTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/retail_name"
+                    android:text="소매가"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/retail_price"
+                    android:text=""
+                    android:textSize="16pt"
+                    android:gravity="right"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="원"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="단위:"
+                    android:layout_marginRight="5dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/retail_unit"
+                    android:text=""
+                    android:textSize="12pt"
+                    />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:gravity="right"
+                android:id="@+id/price_name"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text=""
-                android:id="@+id/product" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_preference" />
+                android:gravity="left"
+                android:id="@+id/current_price"
+                android:visibility="gone"/>
         </LinearLayout>
-
+        <TextView
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="#888888"/>
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="40dp"
+            android:background="#ffffff"
+            android:visibility="gone"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="도매"
+                android:textColor="#ffffff"
+                android:background="@drawable/button1"
+                android:visibility="gone"
+                android:id="@+id/button_wholesale" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="소매"
+                android:visibility="gone"
+                android:id="@+id/button_retail"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff">
 
             <Spinner
                 android:layout_width="match_parent"
@@ -48,48 +202,13 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:gravity="right"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=""
-                android:id="@+id/price_name"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=""
-                android:id="@+id/current_price" />
-        </LinearLayout>
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="도매"
-                android:id="@+id/button_wholesale" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="소매"
-                android:id="@+id/button_retail"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
 
         <com.github.mikephil.charting.charts.LineChart
+            android:background="#ffffff"
             android:id="@+id/chart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

@@ -3,7 +3,10 @@ package hyuse.how_much;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+
 import android.content.DialogInterface;
+import android.graphics.Color;
+
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -14,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,7 +33,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ResultFragment extends Fragment {
     private LineChart chart;
@@ -45,10 +52,26 @@ public class ResultFragment extends Fragment {
     private TextView current_price;
     private DBOpenHelper db;
     private CheckBox button_preference;
+
+    private Button button_wholesale_bottom;
+    private Button button_retail_bottom;
+    private LinearLayout linear_layout;
+    private LinearLayout retail_linear;
+    private LinearLayout wholesale_linear;
+    private LinearLayout retail;
+    private LinearLayout wholesale;
+    private TextView wholesale_name;
+    private TextView retail_name;
+    private TextView wholesale_price;
+    private TextView retail_price;
+    private TextView wholesale_unit;
+    private TextView retail_unit;
+
     private Spinner spinner_do;
     private Spinner spinner_si;
     private ArrayAdapter<CharSequence> do_adapter;
     private ArrayAdapter<CharSequence> si_adapter;
+
 
     /* Kyojun Hwang  code */
     @Override
@@ -64,9 +87,20 @@ public class ResultFragment extends Fragment {
         price_name = (TextView) view.findViewById(R.id.price_name);
         current_price = (TextView) view.findViewById(R.id.current_price);
 
+
         db = new DBOpenHelper(getActivity());
         post_json = new PostJSON();
         post_json.setType("result");
+
+
+        retail = (LinearLayout) view.findViewById(R.id.retail);
+        wholesale = (LinearLayout) view.findViewById(R.id.wholesale);
+        wholesale_name = (TextView) view.findViewById(R.id.wholesale_name);
+        wholesale_price = (TextView) view.findViewById(R.id.wholesale_price);
+        retail_name = (TextView) view.findViewById(R.id.retail_name);
+        retail_price = (TextView) view.findViewById(R.id.retail_price);
+        retail_unit = (TextView) view.findViewById(R.id.retail_unit);
+        wholesale_unit = (TextView) view.findViewById(R.id.wholesale_unit);
 
         Bundle bundle = this.getArguments();
         final String name = bundle.getString("name", "NULL");
@@ -96,18 +130,38 @@ public class ResultFragment extends Fragment {
         spinner_do = (Spinner) view.findViewById(R.id.spinner_do);
         spinner_si = (Spinner) view.findViewById(R.id.spinner_si);
 
+        wholesale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wholesale.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                retail.setBackground(getResources().getDrawable(R.drawable.button_normal));
+                drawWholesale();
+            }
+        });
+        retail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wholesale.setBackground(getResources().getDrawable(R.drawable.button_normal));
+                retail.setBackground(getResources().getDrawable(R.drawable.button_selected));
+                drawRetail();
+            }
+        });
+/*
         button_wholesale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 drawWholesale();
             }
         });
         button_retail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 drawRetail();
             }
         });
+        */
         button_preference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +196,25 @@ public class ResultFragment extends Fragment {
                 break;
             }
         }
+
+/*
+        if(wholesale_data_set_list.size() == 0) {
+            button_wholesale.setVisibility(View.GONE);
+            //button_wholesale_bottom.setVisibility(View.GONE);
+            //button_wholesale.setText("");
+            //button_wholesale_bottom.setBackgroundColor(Color.WHITE);
+            //button_wholesale.setOnClickListener(null);
+            //wholesale_linear.setVisibility(View.GONE);
+        }
+        if(retail_data_set_list.size() == 0) {
+            button_retail.setVisibility(View.GONE);
+            //button_retail_bottom.setVisibility(View.GONE);
+            //button_retail.setText("");
+            //button_retail_bottom.setBackgroundColor(Color.WHITE);
+            //button_retail.setOnClickListener(null);
+            //retail_linear.setVisibility(View.GONE);
+        }
+*/
 
         spinner_si.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -191,6 +264,7 @@ public class ResultFragment extends Fragment {
 
             }
         });
+
 
         spinner_si.setSelection(index);
         String[] si_list = setSiAdapter(index);
@@ -281,6 +355,10 @@ public class ResultFragment extends Fragment {
             }
 
             if(num_of_item != 0) {
+                retail.setVisibility(View.VISIBLE);
+                retail_price.setText(NumberFormat.getNumberInstance(Locale.US).format(average / num_of_item));
+                //retail_price.setText(average / num_of_item + "");
+                retail_unit.setText(unit_r+"");
                 price_name.setText("소매가 : ");
                 current_price.setText(current_price.getText() + "" + average / num_of_item + " / " + unit_r);
                 drawRetail();
@@ -334,9 +412,28 @@ public class ResultFragment extends Fragment {
             }
 
             if(num_of_item != 0) {
+
+                System.out.println("alsjfasjflasjf;lajs;f");
+                wholesale.setVisibility(View.VISIBLE);
+                //wholesale_price.setText(average / num_of_item+"");
+                wholesale_price.setText(NumberFormat.getNumberInstance(Locale.US).format(average / num_of_item));
+                wholesale_unit.setText(unit_w+"");
+                if(price_name.getText().length() == 0) {
+
+                    //price_name.setText("도매가 : ");
+
+
+                    current_price.setText(average / num_of_item + " / " + unit_w);
+                }
+                else {
+                    price_name.setText(price_name.getText() + "\n도매가 : ");
+                    current_price.setText(current_price.getText() + "\n" + average / num_of_item + " / " + unit_w);
+                }
+/*
                 price_name.setText(price_name.getText() + "\n도매가 : ");
                 current_price.setText(current_price.getText() + "\n" + average / num_of_item + " / " + unit_w);
                 drawWholesale();
+*/
             }
         }
         catch (JSONException e) {
@@ -346,10 +443,22 @@ public class ResultFragment extends Fragment {
 
     public void drawRetail() {
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        if(retail_data_set_list.size() == 0)
+        /*
+        //button_retail_bottom.setBackgroundColor(Color.LTGRAY);
+        //button_wholesale_bottom.setBackgroundColor(Color.WHITE);
+        if(retail_data_set_list.size() == 0) {
             button_retail.setVisibility(View.GONE);
-        else
+            //button_retail.setText("");
+            //button_retail_bottom.setBackgroundColor(Color.WHITE);
+            //button_retail_bottom.setVisibility(View.GONE);
+            //button_retail.setOnClickListener(null);
+            //retail_linear.setVisibility(View.GONE);
+        }
+        else {
             button_retail.setVisibility(View.VISIBLE);
+            //button_retail_bottom.setVisibility(View.VISIBLE);
+        }
+        */
 
         for (int i = 0; i < retail_data_set_list.size(); i++) {
             dataSets.add(retail_data_set_list.get(i));
@@ -365,11 +474,25 @@ public class ResultFragment extends Fragment {
 
     public void drawWholesale() {
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        if(wholesale_data_set_list.size() == 0)
+
+        //button_retail_bottom.setBackgroundColor(Color.WHITE);
+        //button_wholesale_bottom.setBackgroundColor(Color.LTGRAY);
+        /*
+        if(wholesale_data_set_list.size() == 0) {
             button_wholesale.setVisibility(View.GONE);
-        else
+            //button_wholesale_bottom.setVisibility(View.GONE);
+            //button_wholesale.setOnClickListener(null);
+            //button_wholesale.setText("");
+            //button_wholesale_bottom.setBackgroundColor(Color.WHITE);
+            //wholesale_linear.setVisibility(View.GONE);
+        }
+        else {
+
             button_wholesale.setVisibility(View.VISIBLE);
 
+            //button_wholesale_bottom.setVisibility(View.VISIBLE);
+        }
+*/
         for (int i = 0; i < wholesale_data_set_list.size(); i++) {
             dataSets.add(wholesale_data_set_list.get(i));
         }
