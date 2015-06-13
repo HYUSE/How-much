@@ -161,8 +161,9 @@ def result(request):
     		price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
     		price.append(dict(price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, date=price_date))
         # server test data end
+        name = ssub.sub.main.category.name+' > '+ssub.sub.main.name+' > '+ssub.sub.name+' > '+ssub.name
         if len(price) != 0:
-        	response_j["data"].append(dict(grade=ssub.name, price=price))
+        	response_j["data"].append(dict(grade=name, price=price))
         # for i in range(5):
             #     delta = timedelta(days=-(4-i))
             #     now = date.today() + delta
