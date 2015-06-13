@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
     public final static int FRAGMENT_RETRIEVE = 2;
     public final static int FRAGMENT_GPS = 3;
     private boolean keyboard_close;
-    private DBOpenHelper db_open_helper;
+    private DBOpenHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +46,14 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
         Button button_gps = (Button) findViewById(R.id.button_gps);
         button_gps.setOnClickListener(this);
 
-        db_open_helper = new DBOpenHelper(this);
-        db_open_helper = db_open_helper.open();
+        db = new DBOpenHelper(this);
+        db = db.open();
         keyboard_close = false;
 
         Intent intentSubActivity = new Intent(MainActivity.this, Logo.class);
         startActivityForResult(intentSubActivity,0);
 
-        if(!false){
+        if(db.selectRegion().equals("")){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("현재 위치 설정");
             alert.setMessage("현재 위치가 설정되어 있지 않습니다.\n 현재 위치를 설정 합니다.");

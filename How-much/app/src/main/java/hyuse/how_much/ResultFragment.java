@@ -41,6 +41,7 @@ public class ResultFragment extends Fragment {
     private LineChart chart;
     private ArrayList<String> x_values;
     private String result;
+    private String[] name;
     private ArrayList<LineDataSet> retail_data_set_list;
     private ArrayList<LineDataSet> wholesale_data_set_list;
     private String unit_r;
@@ -67,11 +68,13 @@ public class ResultFragment extends Fragment {
     private TextView wholesale_unit;
     private TextView retail_unit;
     private TextView product_textview;
+
     private Spinner spinner_do;
     private Spinner spinner_si;
     private ArrayAdapter<CharSequence> do_adapter;
     private ArrayAdapter<CharSequence> si_adapter;
-
+    private boolean check;
+    private String sub_id;
 
     /* Kyojun Hwang  code */
     @Override
@@ -91,7 +94,7 @@ public class ResultFragment extends Fragment {
         db = new DBOpenHelper(getActivity());
         post_json = new PostJSON();
         post_json.setType("result");
-
+        check = false;
 
         retail = (LinearLayout) view.findViewById(R.id.retail);
         wholesale = (LinearLayout) view.findViewById(R.id.wholesale);
@@ -103,11 +106,9 @@ public class ResultFragment extends Fragment {
         wholesale_unit = (TextView) view.findViewById(R.id.wholesale_unit);
 
         Bundle bundle = this.getArguments();
-        final String name = null;
-        final String sub_id = bundle.getString("sub_id","NULL");
+        sub_id = bundle.getString("sub_id","NULL");
 
         product_textview = (TextView) view.findViewById(R.id.product);
-
 
         chart = (LineChart) view.findViewById(R.id.chart);
 
@@ -165,7 +166,7 @@ public class ResultFragment extends Fragment {
         button_preference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.insertPreference(sub_id, name);
+                db.insertPreference(sub_id, name[1] + "-" + name[2] + "-");
             }
         });
 
@@ -224,17 +225,8 @@ public class ResultFragment extends Fragment {
 
                     post_json.setType("result");
                     if(post_json.send(sub_id, region)) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                        alert.setTitle("연결 실패");
-                        alert.setMessage("인터넷 연결이 실패하였습니다.\n 다시 시도해주십시오.");
-                        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                getActivity().finish();
-                                getActivity().moveTaskToBack(true);
-                                android.os.Process.killProcess(android.os.Process.myPid());
-                            }
-                        });
-                        alert.show();
+                        disconnectInternet();
+                        return;
                     }
                     result = post_json.returnResult();
                     while (result == null) {
@@ -253,8 +245,6 @@ public class ResultFragment extends Fragment {
                 if(retail_data_set_list.size() == 0)
                     button_retail.setVisibility(View.GONE);
 
-                db.insertSearch(sub_id, name);
-
                 if(db.checkPreference(sub_id))
                     button_preference.setChecked(true);
             }
@@ -264,7 +254,6 @@ public class ResultFragment extends Fragment {
 
             }
         });
-
 
         spinner_si.setSelection(index);
         String[] si_list = setSiAdapter(index);
@@ -281,9 +270,8 @@ public class ResultFragment extends Fragment {
     }
 
     public String[] setSiAdapter(int position) {
-        /*
+/*
         switch (position) {
-
             case 0:
                 si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
                         android.R.layout.simple_spinner_item);
@@ -310,11 +298,17 @@ public class ResultFragment extends Fragment {
                 return getResources().getStringArray(R.array.si_055);
         }
 */
-        return null;
+        int si_list[] = {  R.array.si_1,R.array.si_2,R.array.si_3,R.array.si_4,R.array.si_5,R.array.si_6,
+                R.array.si_7,R.array.si_8,R.array.si_9,R.array.si_10,R.array.si_11,R.array.si_12,
+                R.array.si_13,R.array.si_14,R.array.si_15 };
+        si_adapter = ArrayAdapter.createFromResource(getActivity(), si_list[(int)position],    android.R.layout.simple_spinner_item);
+        return getResources().getStringArray(si_list[(int)position]);
+        //return null;
     }
 
     public void retail() {
         try {
+
             price_name.setText("");
             current_price.setText("");
             retail_data_set_list = new ArrayList<LineDataSet>();
@@ -349,16 +343,21 @@ public class ResultFragment extends Fragment {
                         num_of_item += 1;
                     }
                 }
-                String s = inside_object.getString("grade");
-                String[] t = s.split(">");
+                String[] s = inside_object.getString("grade").trim().split(">");
 
-                product_textview.setText(t[0]+">"+t[1]+">"+t[2]);
+                if(check == false) {
+                    System.out.println(s[1] + " ><> <" + s[2]);
+                    db.insertSearch(sub_id.trim(), s[1] + "-" + s[2] + "-");
+                }
+                check = true;
+                product_textview.setText(s[0] + ">" + s[1] + ">" + s[2]);
                 LineDataSet setComp = new LineDataSet(retail_list, inside_object.getString("grade"));
                 setComp.setValueFormatter(new MyLabelFormatter());
                 if(retail_list.size() > 0)
                     retail_data_set_list.add(setComp);
             }
 
+            System.out.println("num_of_item: " + num_of_item);
             if(num_of_item != 0) {
                 retail.setVisibility(View.VISIBLE);
                 retail_price.setText(NumberFormat.getNumberInstance(Locale.US).format(average / num_of_item));
@@ -368,10 +367,12 @@ public class ResultFragment extends Fragment {
                 current_price.setText(current_price.getText() + "" + average / num_of_item + " / " + unit_r);
                 drawRetail();
             }
+
         }
         catch (JSONException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -380,6 +381,7 @@ public class ResultFragment extends Fragment {
             wholesale_data_set_list = new ArrayList<LineDataSet>();
 
             JSONObject object = new JSONObject(result);
+            System.out.print(result);
             JSONArray data = new JSONArray(object.getString("data"));
             int average = 0;
             int num_of_item = 0;
@@ -409,13 +411,21 @@ public class ResultFragment extends Fragment {
                         num_of_item += 1;
                     }
                 }
+                String[] s = inside_object.getString("grade").trim().split(">");
+                System.out.println(s);
+                if(check == false) {
+                    System.out.println(s[1] + " ><<><><<<>" + s[2]);
+                    db.insertSearch(sub_id.trim(), s[1] + "-" + s[2] + "-");
+                }
+                check = true;
+                product_textview.setText(s[0] + ">" + s[1] + ">" + s[2]);
 
                 LineDataSet setComp = new LineDataSet(wholesale_list, inside_object.getString("grade"));
                 setComp.setValueFormatter(new MyLabelFormatter());
                 if(wholesale_list.size() > 0)
                     wholesale_data_set_list.add(setComp);
             }
-
+            System.out.println("num_of_item: " + num_of_item);
             if(num_of_item != 0) {
 
                 System.out.println("alsjfasjflasjf;lajs;f");
@@ -510,7 +520,20 @@ public class ResultFragment extends Fragment {
         chart.setData(data);
         chart.invalidate();
     }
+
+    public void disconnectInternet() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("연결 끊김");
+        alert.setMessage("서버와의 연결이 끊겼습니다.\n다시 시도해주십시오.");
+        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+            }
+        });
+        alert.show();
+    }
     /* Kyojun Hwang  code end */
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -538,3 +561,4 @@ public class ResultFragment extends Fragment {
 
 
 }
+

@@ -1,8 +1,10 @@
 package hyuse.how_much;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -44,13 +46,13 @@ public class HomeFragment extends Fragment {
         // ListView에 어댑터 연결
         //preference_list.setAdapter(list_adapter);
         list_adapter.add(new home_data("배","3000"+"원",true) );
-        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
         list_adapter.add(new home_data("배","3000"+"원",true) );
-        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
         list_adapter.add(new home_data("배","3000"+"원",true) );
-        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
         list_adapter.add(new home_data("배","3000"+"원",true) );
-        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
         list_adapter.add(new home_data("배","3000"+"원",true) );
         list_adapter.add(new home_data("사과","4000"+"원",false));
 
@@ -84,9 +86,20 @@ public class HomeFragment extends Fragment {
     }
     private void MakeList() {
         //DB에서 읽어 오기
-
-
     }
+
+    public void disconnectInternet() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("연결 끊김");
+        alert.setMessage("서버와의 연결이 끊겼습니다.\n다시 시도해주십시오.");
+        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+            }
+        });
+        alert.show();
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

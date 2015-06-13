@@ -96,6 +96,8 @@ public class DBOpenHelper {
     }
 
     public void insertPreference(String item_id, String item_name) {
+        Log.d("AAASFASDF",item_id + item_name);
+
         Cursor cursor = db.rawQuery("SELECT item_id FROM preference WHERE item_id = " + item_id, null);
         if(cursor.moveToNext()) {
             deletePreference(item_id);
@@ -106,6 +108,8 @@ public class DBOpenHelper {
     }
 
     public void insertSearch(String item_id, String item_name) {
+        Log.d("ASDFASDFASDFADSF",item_id + item_name);
+
         Cursor cursor = db.rawQuery("SELECT count FROM num_of_search WHERE item_id = " + item_id, null);
         if(cursor.moveToNext())
             updateSearch(item_id);
