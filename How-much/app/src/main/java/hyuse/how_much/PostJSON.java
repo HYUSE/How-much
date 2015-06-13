@@ -1,14 +1,21 @@
 package hyuse.how_much;
 
-import android.os.AsyncTask;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.*;
+import android.os.Process;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -17,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -27,49 +33,94 @@ public class PostJSON {
     private String url = "http://bear.3dwise.com:8000/price/";
     private String result;
     private String type;
+    private HttpAsyncTask task;
+
     /* Kyojun Hwang  code */
     public void setType(String type) {
         result = null;
         this.type = type;
     }
 
-    public void send(String sub_id, String region_si) {
+    public boolean send(String sub_id, String region_si) {
         if (type.equals("result")) {
             String data = "?sub_id=" + sub_id + "&region_si=" + region_si;
             String u = url + type + data;
-            new HttpAsyncTask().execute(u, "get");
+
+            try {
+                task = new HttpAsyncTask();
+                if(task.execute(u, "get").get()) {
+                    task.cancel(true);
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+        return false;
     }
 
-    public void send() {
+    public boolean send() {
         String u = url + type;
-        new HttpAsyncTask().execute(u, "get");
+
+        try {
+            task = new HttpAsyncTask();
+            if(task.execute(u, "get").get()) {
+                task.cancel(true);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
-    public void send(String _data) {
+    public boolean send(String _data) {
         String data = "";
         String u = "";
-
-        switch (type) {
-            case "main":
-                data = "?category_id=" + _data;
-                u = url + type + data;
-                new HttpAsyncTask().execute(u, "get");
-                break;
-            case "sub":
-                data = "?main_id=" + _data;
-                u = url + type + data;
-                new HttpAsyncTask().execute(u, "get");
-                break;
-            case "auto_complete":
-                data = "?data=" + _data.replace(" ", "");
-                u = url + type + data;
-                new HttpAsyncTask().execute(u, "get");
-                break;
-            case "home":
-                new HttpAsyncTask().execute(_data, "post");
-                break;
+        try {
+            switch (type) {
+                case "main":
+                    data = "?category_id=" + _data;
+                    u = url + type + data;
+                    task = new HttpAsyncTask();
+                    if(task.execute(u, "get").get()) {
+                        task.cancel(true);
+                        return true;
+                    }
+                    break;
+                case "sub":
+                    data = "?main_id=" + _data;
+                    u = url + type + data;
+                    task = new HttpAsyncTask();
+                    if(task.execute(u, "get").get()) {
+                        task.cancel(true);
+                        return true;
+                    }
+                    break;
+                case "auto_complete":
+                    data = "?data=" + _data.replace(" ", "");
+                    u = url + type + data;
+                    task = new HttpAsyncTask();
+                    if(task.execute(u, "get").get()) {
+                        task.cancel(true);
+                        return true;
+                    }
+                    break;
+                case "home":
+                    task = new HttpAsyncTask();
+                    if (task.execute(_data, "post").get()) {
+                        task.cancel(true);
+                        return true;
+                    }
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return false;
     }
 
     public String returnResult() throws ExecutionException, InterruptedException {
@@ -79,9 +130,11 @@ public class PostJSON {
 
     /* haryeong code */
     public void GET(final String urlString){
+
         final int[] end = {1};
         final String[] responseString = new String[1];
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 HttpClient httpClient = new DefaultHttpClient();
@@ -91,17 +144,14 @@ public class PostJSON {
                     URI url = new URI(urlString);
 
                     HttpGet httpGet = new HttpGet(url);
-
                     httpResponse = httpClient.execute(httpGet);
                     responseString[0] = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
                     end[0] = 0;
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
         }).start();
         while(end[0] == 1){}
@@ -150,16 +200,28 @@ public class PostJSON {
         return result;
     }
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
+    private class HttpAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
         @Override
-        protected String doInBackground(String... objs) {
-            if (objs[1].equals("get"))
-                GET(objs[0]);
-            else if (objs[1].equals("post"))
-                POST(objs[0]);
+        protected Boolean doInBackground(String... objs) {
+            try {
+                HttpClient httpClient = new DefaultHttpClient();
 
-            return null;
+                HttpParams param = httpClient.getParams();
+                HttpConnectionParams.setConnectionTimeout(param, 2000);
+                HttpConnectionParams.setSoTimeout(param, 2000);
+
+                HttpGet httpGet = new HttpGet(url);
+                httpClient.execute(httpGet);
+
+                if (objs[1].equals("get"))
+                    GET(objs[0]);
+                else if (objs[1].equals("post"))
+                    POST(objs[0]);
+            } catch (Exception e) {
+                return true;
+            }
+            return false;
         }
     }
     /* Kyojun Hwang  code end */

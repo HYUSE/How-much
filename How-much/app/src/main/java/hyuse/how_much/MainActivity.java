@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +50,8 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
         db_open_helper = db_open_helper.open();
         keyboard_close = false;
 
-        Log.d("AAAA", "ASFASDFASFASFASFASFA");
+        Intent intentSubActivity = new Intent(MainActivity.this, Logo.class);
+        startActivityForResult(intentSubActivity,0);
 
         if(!false){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -65,7 +67,6 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
         else{
             mCurrentFragmentIndex = FRAGMENT_HOME;
         }
-
         fragmentReplace(mCurrentFragmentIndex);
     }
 
