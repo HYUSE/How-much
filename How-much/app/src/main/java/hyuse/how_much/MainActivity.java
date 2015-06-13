@@ -3,10 +3,13 @@ package hyuse.how_much;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +20,8 @@ import static hyuse.how_much.R.id.fragment_layout;
 
 
 public class MainActivity extends Activity implements View.OnClickListener, GpsFragment.OnFragmentInteractionListener
-                                                , SeachIndexFragment.OnFragmentInteractionListener,ResultFragment.OnFragmentInteractionListener
-                                                , RetrieveFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener{
+        , SeachIndexFragment.OnFragmentInteractionListener,ResultFragment.OnFragmentInteractionListener
+        , RetrieveFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener{
 
     int mCurrentFragmentIndex;
     public final static int FRAGMENT_HOME = 0;
@@ -27,7 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
     public final static int FRAGMENT_GPS = 3;
     private boolean keyboard_close;
     private DBOpenHelper db_open_helper;
-    /* Kyojun Hwang  code */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +49,22 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
         db_open_helper = db_open_helper.open();
         keyboard_close = false;
 
-        mCurrentFragmentIndex = FRAGMENT_HOME;
+        Log.d("AAAA", "ASFASDFASFASFASFASFA");
+
+        if(!false){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("현재 위치 설정");
+            alert.setMessage("현재 위치가 설정되어 있지 않습니다.\n 현재 위치를 설정 합니다.");
+            alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    fragmentReplace(FRAGMENT_GPS);
+                }
+            });
+            alert.show();
+        }
+        else{
+            mCurrentFragmentIndex = FRAGMENT_HOME;
+        }
 
         fragmentReplace(mCurrentFragmentIndex);
     }
@@ -116,7 +134,7 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
                 break;
         }
     }
-    /* Kyojun Hwang  code end */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -6,14 +6,16 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -46,6 +48,7 @@ public class ResultFragment extends Fragment {
     private TextView current_price;
     private DBOpenHelper db;
     private CheckBox button_preference;
+
     private Button button_wholesale_bottom;
     private Button button_retail_bottom;
     private LinearLayout linear_layout;
@@ -59,11 +62,16 @@ public class ResultFragment extends Fragment {
     private TextView retail_price;
     private TextView wholesale_unit;
     private TextView retail_unit;
+
+    private Spinner spinner_do;
+    private Spinner spinner_si;
+    private ArrayAdapter<CharSequence> do_adapter;
+    private ArrayAdapter<CharSequence> si_adapter;
+
+
     /* Kyojun Hwang  code */
     public ResultFragment() {
         db = new DBOpenHelper(getActivity());
-        retail_data_set_list = new ArrayList<LineDataSet>();
-        wholesale_data_set_list = new ArrayList<LineDataSet>();
         post_json = new PostJSON();
         post_json.setType("result");
     }
@@ -113,10 +121,12 @@ public class ResultFragment extends Fragment {
         button_wholesale = (Button) view.findViewById(R.id.button_wholesale);
         button_retail = (Button) view.findViewById(R.id.button_retail);
         button_preference = (CheckBox) view.findViewById(R.id.button_preference);
+        spinner_do = (Spinner) view.findViewById(R.id.spinner_do);
+        spinner_si = (Spinner) view.findViewById(R.id.spinner_si);
+
         wholesale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 wholesale.setBackground(getResources().getDrawable(R.drawable.button_selected));
                 retail.setBackground(getResources().getDrawable(R.drawable.button_normal));
                 drawWholesale();
@@ -148,24 +158,40 @@ public class ResultFragment extends Fragment {
         */
         button_preference.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {db.insertPreference(sub_id, name);
+            public void onClick(View v) {
+                db.insertPreference(sub_id, name);
             }
         });
 
-        try {
-            post_json.setType("result");
-            post_json.send(sub_id,"서울");
-            result = post_json.returnResult();
-            while(result == null) { result = post_json.returnResult(); }
+        do_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.do_list, android.R.layout.simple_spinner_item);
+        do_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_do.setAdapter(do_adapter);
+        spinner_do.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                setSiAdapter(position);
+                si_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner_si.setAdapter(si_adapter);
+            }
 
-            retail();
-            wholesale();
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        String[] region = db.selectRegion().split(" ");
+        String[] do_list = getResources().getStringArray(R.array.do_list);
+
+        int index = 0;
+        for(int i = 0; i < do_list.length; i++) {
+            if(do_list[i].equals(region[0])) {
+                index = i;
+                break;
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
 
+/*
         if(wholesale_data_set_list.size() == 0) {
             button_wholesale.setVisibility(View.GONE);
             //button_wholesale_bottom.setVisibility(View.GONE);
@@ -182,18 +208,97 @@ public class ResultFragment extends Fragment {
             //button_retail.setOnClickListener(null);
             //retail_linear.setVisibility(View.GONE);
         }
+*/
+
+        spinner_si.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                try {
+                    String region = (String) adapterView.getItemAtPosition(position);
+
+                    post_json.setType("result");
+                    post_json.send(sub_id, region);
+                    result = post_json.returnResult();
+                    while (result == null) {
+                        result = post_json.returnResult();
+                    }
+
+                    retail();
+                    wholesale();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if(wholesale_data_set_list.size() == 0)
+                    button_wholesale.setVisibility(View.GONE);
+                if(retail_data_set_list.size() == 0)
+                    button_retail.setVisibility(View.GONE);
+
+                db.insertSearch(sub_id, name);
+
+                if(db.checkPreference(sub_id))
+                    button_preference.setChecked(true);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
-        db.insertSearch(sub_id, name);
+        spinner_si.setSelection(index);
+        String[] si_list = setSiAdapter(index);
 
-        if(db.checkPreference(sub_id))
-            button_preference.setChecked(true);
+        for(int i = 0; i < si_list.length; i++) {
+            if(si_list[i].equals(region[1])) {
+                index = i;
+                break;
+            }
+        }
+        spinner_do.setSelection(index);
 
         return view;
     }
 
+    public String[] setSiAdapter(int position) {
+        switch (position) {
+            case 0:
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
+                        android.R.layout.simple_spinner_item);
+                return getResources().getStringArray(R.array.si_02);
+            case 1:
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_031,
+                        android.R.layout.simple_spinner_item);
+                return getResources().getStringArray(R.array.si_031);
+            case 2:
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_033,
+                        android.R.layout.simple_spinner_item);
+                return getResources().getStringArray(R.array.si_033);
+            case 3:
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_041,
+                        android.R.layout.simple_spinner_item);
+                return getResources().getStringArray(R.array.si_041);
+            case 4:
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_063,
+                        android.R.layout.simple_spinner_item);
+                return getResources().getStringArray(R.array.si_063);
+            case 5:
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_055,
+                        android.R.layout.simple_spinner_item);
+                return getResources().getStringArray(R.array.si_055);
+        }
+
+        return null;
+    }
+
     public void retail() {
         try {
+            price_name.setText("");
+            current_price.setText("");
+            retail_data_set_list = new ArrayList<LineDataSet>();
+
             JSONObject object = new JSONObject(result);
             JSONArray data = new JSONArray(object.getString("data"));
             int average = 0;
@@ -238,6 +343,7 @@ public class ResultFragment extends Fragment {
                 retail_unit.setText(unit_r+"");
                 price_name.setText("소매가 : ");
                 current_price.setText(current_price.getText() + "" + average / num_of_item + " / " + unit_r);
+                drawRetail();
             }
         }
         catch (JSONException e) {
@@ -248,6 +354,8 @@ public class ResultFragment extends Fragment {
 
     public void wholesale() {
         try {
+            wholesale_data_set_list = new ArrayList<LineDataSet>();
+
             JSONObject object = new JSONObject(result);
             JSONArray data = new JSONArray(object.getString("data"));
             int average = 0;
@@ -286,6 +394,7 @@ public class ResultFragment extends Fragment {
             }
 
             if(num_of_item != 0) {
+
                 System.out.println("alsjfasjflasjf;lajs;f");
                 wholesale.setVisibility(View.VISIBLE);
                 //wholesale_price.setText(average / num_of_item+"");
@@ -302,6 +411,11 @@ public class ResultFragment extends Fragment {
                     price_name.setText(price_name.getText() + "\n도매가 : ");
                     current_price.setText(current_price.getText() + "\n" + average / num_of_item + " / " + unit_w);
                 }
+/*
+                price_name.setText(price_name.getText() + "\n도매가 : ");
+                current_price.setText(current_price.getText() + "\n" + average / num_of_item + " / " + unit_w);
+                drawWholesale();
+*/
             }
         }
         catch (JSONException e) {
