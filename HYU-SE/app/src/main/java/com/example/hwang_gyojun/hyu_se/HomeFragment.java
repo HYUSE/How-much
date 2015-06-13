@@ -18,7 +18,7 @@ import static com.example.hwang_gyojun.hyu_se.R.id.fragment_layout;
 public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private ListView preference_list;
-    private ArrayAdapter<String> list_adapter;
+    private HomeList list_adapter;
     //private HomeList homelist = new HomeList("test");
 
     public HomeFragment() {
@@ -39,35 +39,24 @@ public class HomeFragment extends Fragment {
         preference_list = (ListView) view.findViewById(R.id.preference_list);
 
         // Android에서 제공하는 string 문자열 하나를 출력 가능한 layout으로 어댑터 생성
-        list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
+        list_adapter = new HomeList();
 
         // ListView에 어댑터 연결
         preference_list.setAdapter(list_adapter);
 
-        // ListView 아이템 터치 시 이벤트 추가
-        preference_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ResultFragment newFragment = null;
-                newFragment = new ResultFragment();
-
-                // replace fragment
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("name", list_adapter.getItem(position));
-                newFragment.setArguments(bundle);
-
-                transaction.replace(fragment_layout, newFragment);
-
-                // Commit the transaction
-                transaction.commit();
-            }
-        });
-
         // ListView에 아이템 추가
-        list_adapter.add("사");
-        list_adapter.add("배");
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("사과","4000"+"원",false));
 
         return view;
     }

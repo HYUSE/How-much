@@ -2,6 +2,7 @@ package com.example.hwang_gyojun.hyu_se;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
