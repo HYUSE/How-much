@@ -15,8 +15,10 @@ import static hyuse.how_much.R.id.fragment_layout;
 
 public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    //private ListView preference_list;
     private ListView preference_list;
-    private ArrayAdapter<String> list_adapter;
+    private HomeList list_adapter;
+    //private ArrayAdapter<String> list_adapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -36,11 +38,23 @@ public class HomeFragment extends Fragment {
         preference_list = (ListView) view.findViewById(R.id.preference_list);
 
         // Android에서 제공하는 string 문자열 하나를 출력 가능한 layout으로 어댑터 생성
-        list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-
-        // ListView에 어댑터 연결
+        list_adapter = new HomeList();
+        //list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
         preference_list.setAdapter(list_adapter);
+        // ListView에 어댑터 연결
+        //preference_list.setAdapter(list_adapter);
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
 
+        /*
         // ListView 아이템 터치 시 이벤트 추가
         preference_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,10 +79,14 @@ public class HomeFragment extends Fragment {
         // ListView에 아이템 추가
         list_adapter.add("사");
         list_adapter.add("배");
-
+*/
         return view;
     }
+    private void MakeList() {
+        //DB에서 읽어 오기
 
+
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

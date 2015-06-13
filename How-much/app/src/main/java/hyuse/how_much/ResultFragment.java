@@ -281,7 +281,9 @@ public class ResultFragment extends Fragment {
     }
 
     public String[] setSiAdapter(int position) {
+        /*
         switch (position) {
+
             case 0:
                 si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
                         android.R.layout.simple_spinner_item);
@@ -307,7 +309,7 @@ public class ResultFragment extends Fragment {
                         android.R.layout.simple_spinner_item);
                 return getResources().getStringArray(R.array.si_055);
         }
-
+*/
         return null;
     }
 

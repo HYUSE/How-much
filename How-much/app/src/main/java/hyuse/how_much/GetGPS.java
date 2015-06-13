@@ -52,8 +52,12 @@ public class GetGPS implements LocationListener {
         }
         if(list == null){
             Log.e("getAddress", "주소 데이터 얻기 실패");
-            return null;
+            return ",0,0";
         }
+        if(list.size() > 0){
+            address = ","+latitude.substring(0,5) +","+ longitude.substring(0,6);
+        }
+        /*
         if(list.size() > 0){
             Address addr = list.get(0);
             address = addr.getAdminArea() + " ";
@@ -64,6 +68,7 @@ public class GetGPS implements LocationListener {
                 address += addr.getSubLocality();
             }
         }
+        */
         return address;
     }
 
