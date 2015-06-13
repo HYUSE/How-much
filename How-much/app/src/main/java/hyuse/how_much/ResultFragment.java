@@ -62,7 +62,7 @@ public class ResultFragment extends Fragment {
     private TextView retail_price;
     private TextView wholesale_unit;
     private TextView retail_unit;
-
+    private TextView product_textview;
     private Spinner spinner_do;
     private Spinner spinner_si;
     private ArrayAdapter<CharSequence> do_adapter;
@@ -97,11 +97,11 @@ public class ResultFragment extends Fragment {
         retail_unit = (TextView) view.findViewById(R.id.retail_unit);
         wholesale_unit = (TextView) view.findViewById(R.id.wholesale_unit);
         Bundle bundle = this.getArguments();
-        final String name = bundle.getString("name", "NULL");
+        final String name = null;
         final String sub_id = bundle.getString("sub_id","NULL");
 
-        TextView product_textview = (TextView) view.findViewById(R.id.product);
-        product_textview.setText(name);
+        product_textview = (TextView) view.findViewById(R.id.product);
+
 
         chart = (LineChart) view.findViewById(R.id.chart);
 
@@ -329,7 +329,10 @@ public class ResultFragment extends Fragment {
                         num_of_item += 1;
                     }
                 }
+                String s = inside_object.getString("grade");
+                String[] t = s.split(">");
 
+                product_textview.setText(t[0]+">"+t[1]+">"+t[2]);
                 LineDataSet setComp = new LineDataSet(retail_list, inside_object.getString("grade"));
                 setComp.setValueFormatter(new MyLabelFormatter());
                 if(retail_list.size() > 0)
