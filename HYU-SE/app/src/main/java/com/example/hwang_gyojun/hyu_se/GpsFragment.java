@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class GpsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
@@ -48,8 +52,27 @@ public class GpsFragment extends Fragment {
 
         auto_find.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Toast.makeText(getActivity(),"가장 가까운 위치을 찾습니다.",Toast.LENGTH_LONG);
                 String addr = GPS.get_location();
+                int k=0;
+                String[] res = getResources().getStringArray(R.array.location);
+                float loc[] = {999,999};
+                for(int i=0;i<res.length;i++){
+                    String[] x = res[i].split("-");
+                    String[] y = (x[1]+addr).split(",");
+                    Log.v("aaabb", addr);
+
+                    float a = (Float.parseFloat(y[0])-Float.parseFloat(y[2]));
+                    float b = (Float.parseFloat(y[1])-Float.parseFloat(y[3]));
+                    if(Math.pow(loc[0],2)+Math.pow(loc[1],2)>Math.pow(a,2)+Math.pow(b,2)){
+                        loc[0] = a;
+                        loc[1] = b;
+                        k = i;
+                    }
+                }
+                addr = res[k].split("-")[0].replace(":"," ");
                 GPS_info.setText(addr);
+
             }
         });
 
@@ -59,34 +82,10 @@ public class GpsFragment extends Fragment {
         do_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 do_name = parent.getSelectedItem();
-                switch ((int)id){
-                    case 0:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 1:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_031,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 2:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_033,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 3:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_041,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 4:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_063,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 5:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_055,
-                                android.R.layout.simple_spinner_item);
-                        break;
-
-                    default:
-                }
+                int si_list[] = {  R.array.si_1,R.array.si_2,R.array.si_3,R.array.si_4,R.array.si_5,R.array.si_6,
+                        R.array.si_7,R.array.si_8,R.array.si_9,R.array.si_10,R.array.si_11,R.array.si_12,
+                        R.array.si_13,R.array.si_14,R.array.si_15 };
+                si_adapter = ArrayAdapter.createFromResource(getActivity(), si_list[(int)id],    android.R.layout.simple_spinner_item);
                 si_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 si_spinner.setAdapter(si_adapter);
 

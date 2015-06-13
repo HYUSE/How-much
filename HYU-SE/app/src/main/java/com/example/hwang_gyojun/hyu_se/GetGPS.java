@@ -1,6 +1,7 @@
 package com.example.hwang_gyojun.hyu_se;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -10,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,23 +54,16 @@ public class GetGPS implements LocationListener {
         }
         if(list == null){
             Log.e("getAddress", "주소 데이터 얻기 실패");
-            return null;
+            return ",0,0";
         }
         if(list.size() > 0){
-            Address addr = list.get(0);
-            address = addr.getAdminArea() + " ";
-            if(addr.getLocality() != null){
-                address += addr.getLocality();
-            }
-            else{
-                address += addr.getSubLocality();
-            }
+            address = ","+latitude.substring(0,5) +","+ longitude.substring(0,6);
         }
         return address;
     }
 
-    public void set_location(String str){
-
+    public void set_location(String str) throws IOException {
+        Geocoder geocoder = new Geocoder(prev,Locale.KOREA);
     }
 
     @Override
