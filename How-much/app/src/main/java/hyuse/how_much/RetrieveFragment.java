@@ -1,8 +1,10 @@
 package hyuse.how_much;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,7 +37,6 @@ public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemC
     private PostJSON post_json;
 
     private boolean doubleBackToExitPressedOnce;
-    public RetrieveFragment() {post_json = new PostJSON();}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemC
         final View view = inflater.inflate(R.layout.fragment_retrieve, container, false);
         searchView = (SearchView) view.findViewById(R.id.search_view);
         searchView.setIconified(false);
+
+        post_json = new PostJSON();
 
         /* haryeong code */
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -70,7 +73,20 @@ public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemC
                 q = newText;
                 length[0] = newText.length();
                 post_json.setType("auto_complete");
-                post_json.send(q);
+                if(post_json.send(q)) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                    alert.setTitle("연결 실패");
+                    alert.setMessage("인터넷 연결이 실패하였습니다.\n 다시 시도해주십시오.");
+                    alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().finish();
+                            getActivity().moveTaskToBack(true);
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
+                    });
+                    alert.show();
+                }
+
 
                 try {
                     String responseString = post_json.returnResult();
@@ -147,6 +163,8 @@ public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemC
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         if (doubleBackToExitPressedOnce) {
                             getActivity().finish();
+                            getActivity().moveTaskToBack(true);
+                            android.os.Process.killProcess(android.os.Process.myPid());
                             return true;
                         }
 

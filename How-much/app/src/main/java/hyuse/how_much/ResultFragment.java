@@ -1,7 +1,9 @@
 package hyuse.how_much;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -49,12 +51,6 @@ public class ResultFragment extends Fragment {
     private ArrayAdapter<CharSequence> si_adapter;
 
     /* Kyojun Hwang  code */
-    public ResultFragment() {
-        db = new DBOpenHelper(getActivity());
-        post_json = new PostJSON();
-        post_json.setType("result");
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +63,10 @@ public class ResultFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         price_name = (TextView) view.findViewById(R.id.price_name);
         current_price = (TextView) view.findViewById(R.id.current_price);
+
+        db = new DBOpenHelper(getActivity());
+        post_json = new PostJSON();
+        post_json.setType("result");
 
         Bundle bundle = this.getArguments();
         final String name = bundle.getString("name", "NULL");
@@ -150,7 +150,19 @@ public class ResultFragment extends Fragment {
                     String region = (String) adapterView.getItemAtPosition(position);
 
                     post_json.setType("result");
-                    post_json.send(sub_id, region);
+                    if(post_json.send(sub_id, region)) {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                        alert.setTitle("연결 실패");
+                        alert.setMessage("인터넷 연결이 실패하였습니다.\n 다시 시도해주십시오.");
+                        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().finish();
+                                getActivity().moveTaskToBack(true);
+                                android.os.Process.killProcess(android.os.Process.myPid());
+                            }
+                        });
+                        alert.show();
+                    }
                     result = post_json.returnResult();
                     while (result == null) {
                         result = post_json.returnResult();

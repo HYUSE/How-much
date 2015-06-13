@@ -2,15 +2,16 @@ package hyuse.how_much;
 
 import android.app.Activity;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 
 import android.app.FragmentManager;
 
+import android.content.DialogInterface;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
+import android.os.*;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -40,10 +41,6 @@ public class SeachIndexFragment extends Fragment {
     private PostJSON post_json;
     private boolean doubleBackToExitPressedOnce;
     private OnFragmentInteractionListener mListener;
-
-    public SeachIndexFragment() {
-        post_json = new PostJSON();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +86,8 @@ public class SeachIndexFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_seach_index, container, false);
         final String[] result = {null};
+
+        post_json = new PostJSON();
 
         main_category = (ListView) view.findViewById(R.id.main_category);
         sub_category = (ListView) view.findViewById(R.id.sub_category);
@@ -197,12 +196,14 @@ public class SeachIndexFragment extends Fragment {
         try {
             result[0] = getCategory(null, "category");
 
-            object = new JSONObject(result[0]);
-            JSONArray data = object.getJSONArray("data");
+            if(result[0] != null) {
+                object = new JSONObject(result[0]);
+                JSONArray data = object.getJSONArray("data");
 
-            for (int i = 0; i < data.length(); i++) {
-                RetrieveItem item = new RetrieveItem(data.getJSONObject(i).getString("name"),data.getJSONObject(i).getString("cate_id"));
-                main_adapter.add(item);
+                for (int i = 0; i < data.length(); i++) {
+                    RetrieveItem item = new RetrieveItem(data.getJSONObject(i).getString("name"), data.getJSONObject(i).getString("cate_id"));
+                    main_adapter.add(item);
+                }
             }
 
         } catch (Exception e) {
@@ -219,6 +220,9 @@ public class SeachIndexFragment extends Fragment {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
                         if (doubleBackToExitPressedOnce) {
                             getActivity().finish();
+                            getActivity().moveTaskToBack(true);
+                            android.os.Process.killProcess(android.os.Process.myPid());
+
                             return true;
                         }
 
@@ -251,11 +255,17 @@ public class SeachIndexFragment extends Fragment {
         try {
             post_json.setType(type);
             if (id != null) {
-                post_json.send(id);
+                if(post_json.send(id))
+                    disconnectInternet();
+
                 result = post_json.returnResult();
             }
             else {
-                post_json.send();
+                if(post_json.send()) {
+                    disconnectInternet();
+                    return null;
+                }
+
                 result = post_json.returnResult();
             }
 
@@ -266,6 +276,19 @@ public class SeachIndexFragment extends Fragment {
         }
         return result;
     }
+
+    public void disconnectInternet() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("연결 끊김");
+        alert.setMessage("서버와의 연결이 끊겼습니다.\n다시 시도해주십시오.");
+        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+            }
+        });
+        alert.show();
+    }
+
     /* Kyojun Hwang  code end */
     @Override
     public void onAttach(Activity activity) {
