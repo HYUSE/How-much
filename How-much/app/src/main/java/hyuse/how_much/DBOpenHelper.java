@@ -96,8 +96,6 @@ public class DBOpenHelper {
     }
 
     public void insertPreference(String item_id, String item_name) {
-        Log.d("AAASFASDF",item_id + item_name);
-
         Cursor cursor = db.rawQuery("SELECT item_id FROM preference WHERE item_id = " + item_id, null);
         if(cursor.moveToNext()) {
             deletePreference(item_id);
@@ -108,8 +106,6 @@ public class DBOpenHelper {
     }
 
     public void insertSearch(String item_id, String item_name) {
-        Log.d("ASDFASDFASDFADSF",item_id + item_name);
-
         Cursor cursor = db.rawQuery("SELECT count FROM num_of_search WHERE item_id = " + item_id, null);
         if(cursor.moveToNext())
             updateSearch(item_id);
@@ -139,29 +135,35 @@ public class DBOpenHelper {
         db.execSQL("DELETE FROM preference WHERE item_id = " + item_id);
     }
 
-    public String selectPreference() {
-        String str = "";
+    public String[] selectPreference() {
+        String[] str = {"",""};
 
-        Cursor cursor =  db.rawQuery("SELECT item_id FROM preference", null);
-        if(cursor.moveToNext())
-            str += cursor.getInt(0);
+        Cursor cursor =  db.rawQuery("SELECT item_id, item_name FROM preference", null);
+        if(cursor.moveToNext()) {
+            str[0] += cursor.getInt(0);
+            str[1] += cursor.getString(1);
+        }
 
         while(cursor.moveToNext()) {
-            str += "," + cursor.getInt(0);
+            str[0] += "," + cursor.getInt(0);
+            str[1] += "," + cursor.getString(1);
         }
 
         return str;
     }
 
-    public String selectSearch() {
-        String str = "";
+    public String[] selectSearch() {
+        String[] str = {"",""};
 
-        Cursor cursor =  db.rawQuery("SELECT item_id FROM num_of_search WHERE count >= 5", null);
-        if(cursor.moveToNext())
-            str += cursor.getInt(0);
+        Cursor cursor =  db.rawQuery("SELECT item_id, item_name FROM num_of_search WHERE count >= 5", null);
+        if(cursor.moveToNext()) {
+            str[0] += cursor.getInt(0);
+            str[1] += cursor.getString(1);
+        }
 
         while(cursor.moveToNext()) {
-            str += "," + cursor.getInt(0);
+            str[0] += "," + cursor.getInt(0);
+            str[1] += "," + cursor.getString(1);
         }
 
         return str;

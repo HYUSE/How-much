@@ -167,8 +167,7 @@ public class ResultFragment extends Fragment {
         button_preference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.insertPreference(sub_id, name[1] + "-" + name[2] + "-");
-                Log.d("AAAA",db.selectPreference());
+                db.insertPreference(sub_id, (name[1] + "-" + name[2] + "-"));
             }
         });
 
@@ -349,9 +348,7 @@ public class ResultFragment extends Fragment {
 
                 if(check == false) {
                     name = s;
-                    System.out.println(s[1] + "retail" + s[2]);
-                    db.insertSearch(sub_id.trim(), name[1] + "-" + name[2] + "-");
-                    Log.d("AAAA",db.selectSearch());
+                    db.insertSearch(sub_id.trim(), (name[1] + "-" + name[2] + "-"));
                 }
                 check = true;
                 product_textview.setText(s[0] + ">" + s[1] + ">" + s[2]);
@@ -418,12 +415,9 @@ public class ResultFragment extends Fragment {
                     }
                 }
                 String[] s = inside_object.getString("grade").trim().split(">");
-                System.out.println(s);
                 if(check == false) {
-                    System.out.println(s[1] + "wholesale" + s[2]);
                     name = s;
-                    db.insertSearch(sub_id.trim(), name[1] + "-" + name[2] + "-");
-                    Log.d("AAAA", db.selectSearch());
+                    db.insertSearch(sub_id.trim(), (name[1] + "-" + name[2] + "-"));
                 }
                 check = true;
                 product_textview.setText(s[0] + ">" + s[1] + ">" + s[2]);
