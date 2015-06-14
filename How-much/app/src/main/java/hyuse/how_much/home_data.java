@@ -1,8 +1,9 @@
 package hyuse.how_much;
 /**
- * Created by VVl-lYSl3eaR on 2015-06-13.
+ * Created by Eunjae Lee on 2015-06-13.
  */
 public class home_data {
+    /* Eunjae Lee code */
     public String name;
     public String value;
     public Boolean checker;
@@ -12,4 +13,5 @@ public class home_data {
         value = v;
         checker = c;
     }
+    /* Eunjae Lee code END*/
 }

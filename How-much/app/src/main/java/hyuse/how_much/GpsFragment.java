@@ -23,6 +23,9 @@ public class GpsFragment extends Fragment {
     Spinner si_spinner;
     Object do_name;
     Object si_name;
+    int si_list[] = {  R.array.si_1,R.array.si_2,R.array.si_3,R.array.si_4,R.array.si_5,R.array.si_6,
+            R.array.si_7,R.array.si_8,R.array.si_9,R.array.si_10,R.array.si_11,R.array.si_12,
+            R.array.si_13,R.array.si_14,R.array.si_15 };
     ArrayAdapter<CharSequence> do_adapter;
     ArrayAdapter<CharSequence> si_adapter;
 
@@ -38,7 +41,7 @@ public class GpsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_gps, container, false);
 
-        Spinner do_spinner = (Spinner) view.findViewById(R.id.do_spinner);
+        final Spinner do_spinner = (Spinner) view.findViewById(R.id.do_spinner);
         si_spinner = (Spinner) view.findViewById(R.id.si_spinner);
         Button auto_find = (Button) view.findViewById(R.id.button_confirm);
         GPS_info = (TextView) view.findViewById(R.id.GPS_info);
@@ -46,6 +49,7 @@ public class GpsFragment extends Fragment {
         GPS = new GetGPS(this.getActivity());
         db = new DBOpenHelper(getActivity());
 
+        /* Eunjae Lss Code*/
         auto_find.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String addr = GPS.get_location();
@@ -53,15 +57,15 @@ public class GpsFragment extends Fragment {
 
                 String[] region = addr.split(" ");
                 //db.insertRegion(region[0], region[1]);
-                Toast.makeText(getActivity(), "가장 가까운 위치을 찾습니다.", Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), "가장 가까운 위치을 찾습니다.", Toast.LENGTH_LONG).show();
 
                 int k=0;
                 String[] res = getResources().getStringArray(R.array.location);
                 float loc[] = {999,999};
+                //거리가 가장 가까운 지역 위치를 가져온다.
                 for(int i=0;i<res.length;i++){
                     String[] x = res[i].split("-");
                     String[] y = (x[1]+addr).split(",");
-                    Log.v("aaabb", addr);
 
                     float a = (Float.parseFloat(y[0])-Float.parseFloat(y[2]));
                     float b = (Float.parseFloat(y[1])-Float.parseFloat(y[3]));
@@ -72,7 +76,25 @@ public class GpsFragment extends Fragment {
                     }
                 }
                 addr = res[k].split("-")[0].replace(":"," ");
-                GPS_info.setText(addr);
+                String[] do_list = getResources().getStringArray(R.array.do_list);
+
+                int index1 = 0;
+                int index2 = 0;
+                for(int i = 0; i < do_list.length; i++) {
+                    if(do_list[i].equals(addr.split(" ")[0])) {
+                        index1 = i;
+                        break;
+                    }
+                }
+                String[] si_data = getResources().getStringArray(si_list[index1]);
+                for(int i =0; i<si_data.length;i++){
+                    if(si_data[i].equals(addr.split(" ")[0])) {
+                        index2 = i;
+                        break;
+                    }
+                }
+                do_spinner.setSelection(index1);
+                si_spinner.setSelection(index2);
             }
         });
 
@@ -81,63 +103,27 @@ public class GpsFragment extends Fragment {
         do_spinner.setAdapter(do_adapter);
         do_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //si_adapter를 재설정.
                 do_name = parent.getSelectedItem();
-                int si_list[] = {  R.array.si_1,R.array.si_2,R.array.si_3,R.array.si_4,R.array.si_5,R.array.si_6,
-                        R.array.si_7,R.array.si_8,R.array.si_9,R.array.si_10,R.array.si_11,R.array.si_12,
-                        R.array.si_13,R.array.si_14,R.array.si_15 };
+
                 si_adapter = ArrayAdapter.createFromResource(getActivity(), si_list[(int)id],    android.R.layout.simple_spinner_item);
-/*
-                switch ((int)id){
-
-                    case 0:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 1:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_031,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 2:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_033,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 3:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_041,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 4:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_063,
-                                android.R.layout.simple_spinner_item);
-                        break;
-                    case 5:
-                        si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_055,
-                                android.R.layout.simple_spinner_item);
-                        break;
-
-                    default:
-                }
-                */
                 si_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 si_spinner.setAdapter(si_adapter);
-
-
             }
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
+
         si_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 si_name = parent.getSelectedItem();
                 GPS_info.setText(do_name+" "+si_name);
                 db.insertRegion((String) do_name, (String) si_name);
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
         return view;
+        /* Eunjae Lss Code END*/
     }
 
     @Override
@@ -150,23 +136,10 @@ public class GpsFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);

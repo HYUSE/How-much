@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomeList extends BaseAdapter {
+    /* Eunjae Lee Code */
     private ArrayList<home_data>   m_List;
 
     public HomeList() {
@@ -58,5 +59,5 @@ public class HomeList extends BaseAdapter {
     public void remove(int _position) {
         m_List.remove(_position);
     }
-
+    /* Eunjae Code END */
 }

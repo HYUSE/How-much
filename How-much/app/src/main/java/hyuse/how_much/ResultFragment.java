@@ -270,34 +270,7 @@ public class ResultFragment extends Fragment {
     }
 
     public String[] setSiAdapter(int position) {
-/*
-        switch (position) {
-            case 0:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_02);
-            case 1:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_031,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_031);
-            case 2:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_033,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_033);
-            case 3:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_041,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_041);
-            case 4:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_063,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_063);
-            case 5:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_055,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_055);
-        }
-*/
+
         int si_list[] = {  R.array.si_1,R.array.si_2,R.array.si_3,R.array.si_4,R.array.si_5,R.array.si_6,
                 R.array.si_7,R.array.si_8,R.array.si_9,R.array.si_10,R.array.si_11,R.array.si_12,
                 R.array.si_13,R.array.si_14,R.array.si_15 };
