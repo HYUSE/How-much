@@ -24,11 +24,6 @@ public class GpsFragment extends Fragment {
     ArrayAdapter<CharSequence> do_adapter;
     ArrayAdapter<CharSequence> si_adapter;
 
-    public GpsFragment() {
-        // Required empty public constructor
-        db = new DBOpenHelper(getActivity());
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +42,7 @@ public class GpsFragment extends Fragment {
         GPS_info = (TextView) view.findViewById(R.id.GPS_info);
 
         GPS = new GetGPS(this.getActivity());
+        db = new DBOpenHelper(this.getActivity());
 
         auto_find.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
