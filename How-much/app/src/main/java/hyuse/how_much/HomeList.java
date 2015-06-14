@@ -1,62 +1,62 @@
 package hyuse.how_much;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-/**
- * Created by VVl-lYSl3eaR on 2015-05-11.
- */
-public class HomeList {
-    private class HomeData {
-        private String name;
-        private String grade;
-        private String data1;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        HomeData(String a,String b, String c){
-            name = a;
-            grade = b;
-            data1 = c;
+public class HomeList extends BaseAdapter {
+    private ArrayList<home_data>   m_List;
+
+    public HomeList() {
+        m_List = new ArrayList<home_data>();
+    }
+    public int getCount() {
+        return m_List.size();
+    }
+    public Object getItem(int position) {
+        return m_List.get(position);
+    }
+    public long getItemId(int position) {
+        return position;
+    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final int pos = position;
+        final Context context = parent.getContext();
+        if ( convertView == null ) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.home_item, parent, false);
+            TextView name = (TextView) convertView.findViewById(R.id.item_name);
+            name.setText(m_List.get(position).name);
+            TextView value = (TextView) convertView.findViewById(R.id.item_value);
+            value.setText(m_List.get(position).value);
+            TextView checker = (TextView) convertView.findViewById(R.id.checker);
+            if(!m_List.get(position).checker) {
+                checker.setText("");
+            }
+
+            convertView.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "리스트 클릭 : "+m_List.get(pos), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public String getGrade() {
-            return grade;
-        }
-
-        public String getData1() {
-            return data1;
-        }
+        return convertView;
     }
-
-    ArrayList<HomeData> hdatas;
-
-    HomeList(){
-        hdatas = null;
+    public void add(home_data item) {
+        System.out.println(getCount());
+        m_List.add(item);
     }
-    HomeList(String test){
-        addList("test1");
-        addList("test2");
-        addList("test3");
-        addList("test4");
+    public void remove(int _position) {
+        m_List.remove(_position);
     }
-    void getdatas(){
-        //내부 DB목록을 읽어서 서버로 요청한 다음 addList를 해줍니다.
-    }
-    void addList(String data){
-        hdatas.add(new HomeData(data,data,data));
-    }
-
-    String[] readElem(int i){
-        HomeData d = hdatas.get(i);
-        String d1 = d.getData1();
-        String d2 = d.getGrade();
-        String d3 = d.getName();
-        String[] x = {d1,d2,d3};
-        return x;
-    }
-
 
 }

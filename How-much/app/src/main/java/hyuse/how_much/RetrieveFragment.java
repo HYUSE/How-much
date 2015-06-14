@@ -74,17 +74,8 @@ public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemC
                 length[0] = newText.length();
                 post_json.setType("auto_complete");
                 if(post_json.send(q)) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                    alert.setTitle("연결 실패");
-                    alert.setMessage("인터넷 연결이 실패하였습니다.\n 다시 시도해주십시오.");
-                    alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            getActivity().finish();
-                            getActivity().moveTaskToBack(true);
-                            android.os.Process.killProcess(android.os.Process.myPid());
-                        }
-                    });
-                    alert.show();
+                    disconnectInternet();
+                    return false;
                 }
 
 
@@ -188,6 +179,18 @@ public class RetrieveFragment extends Fragment {//implements AdapterView.OnItemC
 
         return view;
         /* Kyojun Hwang code end */
+    }
+
+    public void disconnectInternet() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("연결 끊김");
+        alert.setMessage("서버와의 연결이 끊겼습니다.\n다시 시도해주십시오.");
+        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+            }
+        });
+        alert.show();
     }
 
     @Override

@@ -1,8 +1,10 @@
 package hyuse.how_much;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,8 +17,10 @@ import static hyuse.how_much.R.id.fragment_layout;
 
 public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    //private ListView preference_list;
     private ListView preference_list;
-    private ArrayAdapter<String> list_adapter;
+    private HomeList list_adapter;
+    //private ArrayAdapter<String> list_adapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -36,11 +40,23 @@ public class HomeFragment extends Fragment {
         preference_list = (ListView) view.findViewById(R.id.preference_list);
 
         // Android에서 제공하는 string 문자열 하나를 출력 가능한 layout으로 어댑터 생성
-        list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-
-        // ListView에 어댑터 연결
+        list_adapter = new HomeList();
+        //list_adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
         preference_list.setAdapter(list_adapter);
+        // ListView에 어댑터 연결
+        //preference_list.setAdapter(list_adapter);
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과", "4000" + "원", false));
+        list_adapter.add(new home_data("배","3000"+"원",true) );
+        list_adapter.add(new home_data("사과","4000"+"원",false));
 
+        /*
         // ListView 아이템 터치 시 이벤트 추가
         preference_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,8 +81,23 @@ public class HomeFragment extends Fragment {
         // ListView에 아이템 추가
         list_adapter.add("사");
         list_adapter.add("배");
-
+*/
         return view;
+    }
+    private void MakeList() {
+        //DB에서 읽어 오기
+    }
+
+    public void disconnectInternet() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle("연결 끊김");
+        alert.setMessage("서버와의 연결이 끊겼습니다.\n다시 시도해주십시오.");
+        alert.setNeutralButton("확인", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().finish();
+            }
+        });
+        alert.show();
     }
 
     @Override

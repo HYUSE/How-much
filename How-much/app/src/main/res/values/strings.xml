@@ -9,54 +9,102 @@
     <string name="logo_title">Logo_title</string>
 
     <string-array name="do_list">
-        <item value="02">서울시</item>
-        <item value="031">경기도</item>
-        <item value="033">강원도</item>
-        <item value="041">충청도</item>
-        <item value="063">전라도</item>
-        <item value="055">경상도</item>
+        <item>서울시</item>
+        <item>경기도</item>
+        <item>강원도</item>
+        <item>충청북도</item>
+        <item>경상북도</item>
+        <item>경상남도</item>
+        <item>전라북도</item>
+        <item>전라남도</item>
+        <item>인천시</item>
+        <item>대전시</item>
+        <item>대구시</item>
+        <item>부산시</item>
+        <item>울산시</item>
+        <item>광주시</item>
+        <item>제주시</item>
     </string-array>
 
-    <string-array name="si_02">
-        <item>서울</item>
-        <item>서울 2</item>
-        <item>서울 3</item>
-        <item>서울 4</item>
-        <item>서울 5</item>
-        <item>서울 6</item>
-        <item>서울 7</item>
+    <string-array name="si_1">
+        <item>서울시</item>
     </string-array>
-    <string-array name="si_031">
-        <item>경기 1</item>
-        <item>경기 2</item>
-        <item>경기 3</item>
-        <item>경기 4</item>
-        <item>경기 5</item>
-        <item>경기 6</item>
-        <item>경기 7</item>
+
+    <string-array name="si_2">
+        <item>의정부시</item>
+        <item>수원시</item>
     </string-array>
-    <string-array name="si_033">
-        <item>강원 1</item>
-        <item>강원 2</item>
-        <item>강원 3</item>
-        <item>강원 4</item>
-        <item>강원 5</item>
-        <item>강원 6</item>
-        <item>강원 7</item>
+
+    <string-array name="si_3">
+        <item>춘천시</item>
     </string-array>
-    <string-array name="si_041">
-        <item>충청 1</item>
-        <item>충청 2</item>
-        <item>충청 3</item>
+
+    <string-array name="si_4">
+        <item>청주시</item>
     </string-array>
-    <string-array name="si_063">
-        <item>광주</item>
-        <item>전라 2</item>
-        <item>전라 3</item>
+
+    <string-array name="si_5">
+        <item>안동시</item>
+        <item>포항시</item>
     </string-array>
-    <string-array name="si_055">
-        <item>경상 1</item>
-        <item>경상 2</item>
-        <item>경상 3</item>
+
+    <string-array name="si_6">
+        <item>창원시</item>
+    </string-array>
+
+    <string-array name="si_7">
+        <item>전주시</item>
+    </string-array>
+
+    <string-array name="si_8">
+        <item>순천시</item>
+    </string-array>
+
+    <string-array name="si_9">
+        <item>인천시</item>
+    </string-array>
+
+    <string-array name="si_10">
+        <item>대전시</item>
+    </string-array>
+
+    <string-array name="si_11">
+        <item>대구시</item>
+    </string-array>
+
+    <string-array name="si_12">
+        <item>부산시</item>
+    </string-array>
+
+    <string-array name="si_13">
+        <item>울산시</item>
+    </string-array>
+
+    <string-array name="si_14">
+        <item>광주시</item>
+    </string-array>
+
+    <string-array name="si_15">
+        <item>제주시</item>
+    </string-array>
+
+    <string-array name="location">
+        <item>서울시:서울-37.56,126.97-1,1</item>
+        <item>경기도:의정부-37.45,127.30-2,1</item>
+        <item>경기도:수원-37.26,127.02-2,2</item>
+        <item>강원도:춘천-37.87,127.73-3,1</item>
+        <item>충청북도:청주-36.64,127.49-4,1</item>
+        <item>경상북도:안동-35.87,128.33-5,1</item>
+        <item>경상북도:포항-36.81,128.12-5,2</item>
+        <item>경상남도:창원-35.23,128.68-6,1</item>
+        <item>전라북도:전주-35.82,127.15-7,1</item>
+        <item>전라남도:순천-34.95,127.48-8,1</item>
+        <item>인천시:인천-37.45,126.73-9,1</item>
+        <item>대전시:대전-36.32,127.42-10,1</item>
+        <item>대구시:대구-35.87,128.60-11,1</item>
+        <item>부산시:부산-35.17,129.07-12,1</item>
+        <item>울산시:울산-35.54,129.32-13,1</item>
+        <item>광주시:광주-35.15,126.92-14,1</item>
+        <item>제주시:제주-33.51,126.52-15,1</item>
     </string-array>
 </resources>

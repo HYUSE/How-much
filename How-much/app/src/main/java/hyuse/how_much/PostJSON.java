@@ -43,9 +43,9 @@ public class PostJSON {
 
     public boolean send(String sub_id, String region_si) {
         if (type.equals("result")) {
-            String data = "?sub_id=" + sub_id + "&region_si=" + region_si;
+            String data = "?sub_id=" + sub_id + "&region_si=" + region_si.substring(0,region_si.length()-1);
             String u = url + type + data;
-
+            System.out.println(u);
             try {
                 task = new HttpAsyncTask();
                 if(task.execute(u, "get").get()) {

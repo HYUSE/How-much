@@ -255,8 +255,10 @@ public class SeachIndexFragment extends Fragment {
         try {
             post_json.setType(type);
             if (id != null) {
-                if(post_json.send(id))
+                if(post_json.send(id)) {
                     disconnectInternet();
+                    return null;
+                }
 
                 result = post_json.returnResult();
             }
