@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -166,7 +167,7 @@ public class ResultFragment extends Fragment {
         button_preference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.insertPreference(sub_id, name[1] + "-" + name[2] + "-");
+                db.insertPreference(sub_id, (name[1] + "-" + name[2] + "-"));
             }
         });
 
@@ -319,8 +320,8 @@ public class ResultFragment extends Fragment {
                 String[] s = inside_object.getString("grade").trim().split(">");
 
                 if(check == false) {
-                    System.out.println(s[1] + " ><> <" + s[2]);
-                    db.insertSearch(sub_id.trim(), s[1] + "-" + s[2] + "-");
+                    name = s;
+                    db.insertSearch(sub_id.trim(), (name[1] + "-" + name[2] + "-"));
                 }
                 check = true;
                 product_textview.setText(s[0] + ">" + s[1] + ">" + s[2]);
@@ -340,6 +341,8 @@ public class ResultFragment extends Fragment {
                 current_price.setText(current_price.getText() + "" + average / num_of_item + " / " + unit_r);
                 drawRetail();
             }
+            else
+                retail.setVisibility(View.GONE);
 
         }
         catch (JSONException e) {
@@ -385,10 +388,9 @@ public class ResultFragment extends Fragment {
                     }
                 }
                 String[] s = inside_object.getString("grade").trim().split(">");
-                System.out.println(s);
                 if(check == false) {
-                    System.out.println(s[1] + " ><<><><<<>" + s[2]);
-                    db.insertSearch(sub_id.trim(), s[1] + "-" + s[2] + "-");
+                    name = s;
+                    db.insertSearch(sub_id.trim(), (name[1] + "-" + name[2] + "-"));
                 }
                 check = true;
                 product_textview.setText(s[0] + ">" + s[1] + ">" + s[2]);
@@ -401,7 +403,6 @@ public class ResultFragment extends Fragment {
             System.out.println("num_of_item: " + num_of_item);
             if(num_of_item != 0) {
 
-                System.out.println("alsjfasjflasjf;lajs;f");
                 wholesale.setVisibility(View.VISIBLE);
                 //wholesale_price.setText(average / num_of_item+"");
                 wholesale_price.setText(NumberFormat.getNumberInstance(Locale.US).format(average / num_of_item));
@@ -423,6 +424,8 @@ public class ResultFragment extends Fragment {
                 drawWholesale();
 */
             }
+            else
+                wholesale.setVisibility(View.GONE);
         }
         catch (JSONException e) {
             e.printStackTrace();

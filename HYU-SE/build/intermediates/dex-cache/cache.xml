@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/pre-dexed/debug/classes-e914ec8b59c202b0eb298d545515ead23b174159.jar" />
+    </item>
+    <item
+        jar="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-ed78deef13c983d99c2052245f6d4c2b3bd657a4.jar" />
+    </item>
+    <item
+        jar="/Users/hwang-gyojun/android-sdks/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-cd26700fd679cf65b0372960cb7f870576197415.jar" />
+    </item>
+    <item
+        jar="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/pre-dexed/debug/classes-de9008f68a3c48ea1e601c2bc8fde5eccac60348.jar" />
+    </item>
+    <item
+        jar="/Users/hwang-gyojun/.gradle/caches/modules-2/files-2.1/com.github.PhilJay/MPAndroidChart/v2.0.9/6df6035161f0263100c3a70626bccbfd0bb545b7/MPAndroidChart-v2.0.9.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="6df6035161f0263100c3a70626bccbfd0bb545b7">
+        <dex dex="/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/build/intermediates/pre-dexed/debug/MPAndroidChart-v2.0.9-44b720958512d62632e17d7773a36ba7da4d77d5.jar" />
+    </item>
+
+</items>

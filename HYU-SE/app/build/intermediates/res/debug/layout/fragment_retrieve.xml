@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hwang_gyojun.hyu_se.RetrieveFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|top">
+
+        <AutoCompleteTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/autoCompleteTextView"
+            android:layout_gravity="left|top"
+            android:completionThreshold="1"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/retrieve_list"
+            android:layout_gravity="left|top" />
+    </LinearLayout>
+</FrameLayout>
+<!-- From: file:/Users/hwang-gyojun/myProject/practice20150311/HYU-SE/app/src/main/res/layout/fragment_retrieve.xml -->
