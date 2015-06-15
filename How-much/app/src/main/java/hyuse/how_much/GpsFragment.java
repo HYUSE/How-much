@@ -53,15 +53,10 @@ public class GpsFragment extends Fragment {
         auto_find.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String addr = GPS.get_location();
-                GPS_info.setText(addr);
 
-<<<<<<< HEAD
                 String[] region = addr.split(" ");
                 //db.insertRegion(region[0], region[1]);
                 Toast.makeText(getActivity(), "가장 가까운 위치을 찾습니다.", Toast.LENGTH_LONG).show();
-=======
-                Toast.makeText(getActivity(), "가장 가까운 위치을 찾습니다.", Toast.LENGTH_LONG);
->>>>>>> 391e44ad2a0c2cd97d43cd3eaa221b11cca20921
 
                 int k=0;
                 String[] res = getResources().getStringArray(R.array.location);
@@ -80,7 +75,6 @@ public class GpsFragment extends Fragment {
                     }
                 }
                 addr = res[k].split("-")[0].replace(":"," ");
-<<<<<<< HEAD
                 String[] do_list = getResources().getStringArray(R.array.do_list);
 
                 int index1 = 0;
@@ -100,11 +94,8 @@ public class GpsFragment extends Fragment {
                 }
                 do_spinner.setSelection(index1);
                 si_spinner.setSelection(index2);
-=======
 
                 //db.insertRegion(region[0], region[1]);
-                GPS_info.setText(addr);
->>>>>>> 391e44ad2a0c2cd97d43cd3eaa221b11cca20921
             }
         });
 
