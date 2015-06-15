@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,15 +53,8 @@ public class ResultFragment extends Fragment {
     private DBOpenHelper db;
     private CheckBox button_preference;
 
-    private Button button_wholesale_bottom;
-    private Button button_retail_bottom;
-    private LinearLayout linear_layout;
-    private LinearLayout retail_linear;
-    private LinearLayout wholesale_linear;
     private LinearLayout retail;
     private LinearLayout wholesale;
-    private TextView wholesale_name;
-    private TextView retail_name;
     private TextView wholesale_price;
     private TextView retail_price;
     private TextView wholesale_unit;
@@ -99,9 +90,7 @@ public class ResultFragment extends Fragment {
 
         retail = (LinearLayout) view.findViewById(R.id.retail);
         wholesale = (LinearLayout) view.findViewById(R.id.wholesale);
-        wholesale_name = (TextView) view.findViewById(R.id.wholesale_name);
         wholesale_price = (TextView) view.findViewById(R.id.wholesale_price);
-        retail_name = (TextView) view.findViewById(R.id.retail_name);
         retail_price = (TextView) view.findViewById(R.id.retail_price);
         retail_unit = (TextView) view.findViewById(R.id.retail_unit);
         wholesale_unit = (TextView) view.findViewById(R.id.wholesale_unit);
@@ -116,6 +105,7 @@ public class ResultFragment extends Fragment {
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(8f);
+        xAxis.setAvoidFirstLastClipping(true);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -148,22 +138,7 @@ public class ResultFragment extends Fragment {
                 drawRetail();
             }
         });
-/*
-        button_wholesale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                drawWholesale();
-            }
-        });
-        button_retail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                drawRetail();
-            }
-        });
-        */
         button_preference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,25 +173,6 @@ public class ResultFragment extends Fragment {
                 break;
             }
         }
-
-/*
-        if(wholesale_data_set_list.size() == 0) {
-            button_wholesale.setVisibility(View.GONE);
-            //button_wholesale_bottom.setVisibility(View.GONE);
-            //button_wholesale.setText("");
-            //button_wholesale_bottom.setBackgroundColor(Color.WHITE);
-            //button_wholesale.setOnClickListener(null);
-            //wholesale_linear.setVisibility(View.GONE);
-        }
-        if(retail_data_set_list.size() == 0) {
-            button_retail.setVisibility(View.GONE);
-            //button_retail_bottom.setVisibility(View.GONE);
-            //button_retail.setText("");
-            //button_retail_bottom.setBackgroundColor(Color.WHITE);
-            //button_retail.setOnClickListener(null);
-            //retail_linear.setVisibility(View.GONE);
-        }
-*/
 
         spinner_si.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -271,40 +227,12 @@ public class ResultFragment extends Fragment {
     }
 
     public String[] setSiAdapter(int position) {
-/*
-        switch (position) {
-            case 0:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_02,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_02);
-            case 1:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_031,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_031);
-            case 2:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_033,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_033);
-            case 3:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_041,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_041);
-            case 4:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_063,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_063);
-            case 5:
-                si_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.si_055,
-                        android.R.layout.simple_spinner_item);
-                return getResources().getStringArray(R.array.si_055);
-        }
-*/
+
         int si_list[] = {  R.array.si_1,R.array.si_2,R.array.si_3,R.array.si_4,R.array.si_5,R.array.si_6,
                 R.array.si_7,R.array.si_8,R.array.si_9,R.array.si_10,R.array.si_11,R.array.si_12,
                 R.array.si_13,R.array.si_14,R.array.si_15 };
         si_adapter = ArrayAdapter.createFromResource(getActivity(), si_list[(int)position],    android.R.layout.simple_spinner_item);
         return getResources().getStringArray(si_list[(int)position]);
-        //return null;
     }
 
     public void retail() {
@@ -358,7 +286,6 @@ public class ResultFragment extends Fragment {
                     retail_data_set_list.add(setComp);
             }
 
-            System.out.println("num_of_item: " + num_of_item);
             if(num_of_item != 0) {
                 retail.setVisibility(View.VISIBLE);
                 retail_price.setText(NumberFormat.getNumberInstance(Locale.US).format(average / num_of_item));
@@ -384,7 +311,6 @@ public class ResultFragment extends Fragment {
             wholesale_data_set_list = new ArrayList<LineDataSet>();
 
             JSONObject object = new JSONObject(result);
-            System.out.print(result);
             JSONArray data = new JSONArray(object.getString("data"));
             int average = 0;
             int num_of_item = 0;
@@ -427,29 +353,19 @@ public class ResultFragment extends Fragment {
                 if(wholesale_list.size() > 0)
                     wholesale_data_set_list.add(setComp);
             }
-            System.out.println("num_of_item: " + num_of_item);
+
             if(num_of_item != 0) {
 
                 wholesale.setVisibility(View.VISIBLE);
-                //wholesale_price.setText(average / num_of_item+"");
                 wholesale_price.setText(NumberFormat.getNumberInstance(Locale.US).format(average / num_of_item));
                 wholesale_unit.setText(unit_w+"");
                 if(price_name.getText().length() == 0) {
-
-                    //price_name.setText("도매가 : ");
-
-
                     current_price.setText(average / num_of_item + " / " + unit_w);
                 }
                 else {
                     price_name.setText(price_name.getText() + "\n도매가 : ");
                     current_price.setText(current_price.getText() + "\n" + average / num_of_item + " / " + unit_w);
                 }
-/*
-                price_name.setText(price_name.getText() + "\n도매가 : ");
-                current_price.setText(current_price.getText() + "\n" + average / num_of_item + " / " + unit_w);
-                drawWholesale();
-*/
             }
             else
                 wholesale.setVisibility(View.GONE);
@@ -461,22 +377,9 @@ public class ResultFragment extends Fragment {
 
     public void drawRetail() {
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        /*
-        //button_retail_bottom.setBackgroundColor(Color.LTGRAY);
-        //button_wholesale_bottom.setBackgroundColor(Color.WHITE);
-        if(retail_data_set_list.size() == 0) {
-            button_retail.setVisibility(View.GONE);
-            //button_retail.setText("");
-            //button_retail_bottom.setBackgroundColor(Color.WHITE);
-            //button_retail_bottom.setVisibility(View.GONE);
-            //button_retail.setOnClickListener(null);
-            //retail_linear.setVisibility(View.GONE);
-        }
-        else {
-            button_retail.setVisibility(View.VISIBLE);
-            //button_retail_bottom.setVisibility(View.VISIBLE);
-        }
-        */
+
+        wholesale.setBackground(getResources().getDrawable(R.drawable.button_normal));
+        retail.setBackground(getResources().getDrawable(R.drawable.button_selected));
 
         for (int i = 0; i < retail_data_set_list.size(); i++) {
             dataSets.add(retail_data_set_list.get(i));
@@ -493,28 +396,12 @@ public class ResultFragment extends Fragment {
     public void drawWholesale() {
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
 
-        //button_retail_bottom.setBackgroundColor(Color.WHITE);
-        //button_wholesale_bottom.setBackgroundColor(Color.LTGRAY);
-        /*
-        if(wholesale_data_set_list.size() == 0) {
-            button_wholesale.setVisibility(View.GONE);
-            //button_wholesale_bottom.setVisibility(View.GONE);
-            //button_wholesale.setOnClickListener(null);
-            //button_wholesale.setText("");
-            //button_wholesale_bottom.setBackgroundColor(Color.WHITE);
-            //wholesale_linear.setVisibility(View.GONE);
-        }
-        else {
+        wholesale.setBackground(getResources().getDrawable(R.drawable.button_selected));
+        retail.setBackground(getResources().getDrawable(R.drawable.button_normal));
 
-            button_wholesale.setVisibility(View.VISIBLE);
-
-            //button_wholesale_bottom.setVisibility(View.VISIBLE);
-        }
-*/
         for (int i = 0; i < wholesale_data_set_list.size(); i++) {
             dataSets.add(wholesale_data_set_list.get(i));
         }
-
 
         LineData data = new LineData(x_values, dataSets);
         data.setValueFormatter(new MyLabelFormatter());

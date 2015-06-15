@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,11 +84,9 @@ public class MainActivity extends Activity implements View.OnClickListener, GpsF
 
         newFragment = getFragment(reqNewFragmentIndex);
 
-        // replace fragment
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(fragment_layout, newFragment);
-        // Commit the transaction
         transaction.commit();
     }
 

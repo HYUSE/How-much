@@ -12,7 +12,6 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.*;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;

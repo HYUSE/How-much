@@ -11,10 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class HomeList extends BaseAdapter {
-    private ArrayList<home_data>   m_List;
+    /* Eunjae Lee Code */
+    private ArrayList<Home_data>   m_List;
 
     public HomeList() {
-        m_List = new ArrayList<home_data>();
+        m_List = new ArrayList<Home_data>();
     }
     public int getCount() {
         return m_List.size();
@@ -51,12 +52,27 @@ public class HomeList extends BaseAdapter {
 
         return convertView;
     }
-    public void add(home_data item) {
-        System.out.println(getCount());
+    public boolean add(Home_data item) {
+        boolean chk = true;
+        for(int i=0;i<getCount();i++){
+            Home_data t = m_List.get(i);
+            if(t.KEY != item.KEY){
+                continue;
+            }
+            else{
+                if(Integer.parseInt(t.value) > Integer.parseInt(item.value)){
+                    m_List.remove(i);
+                    chk = false;
+                }
+            }
+
+        }
         m_List.add(item);
+        return chk;
     }
     public void remove(int _position) {
         m_List.remove(_position);
     }
-
+    public void reset(){m_List = new ArrayList<Home_data>();}
+    /* Eunjae Code END */
 }

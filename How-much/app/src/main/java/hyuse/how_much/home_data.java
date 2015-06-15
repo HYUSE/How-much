@@ -1,15 +1,19 @@
 package hyuse.how_much;
 /**
- * Created by VVl-lYSl3eaR on 2015-06-13.
+ * Created by Eunjae Lee on 2015-06-13.
  */
-public class home_data {
+public class Home_data {
+    /* Eunjae Lee code */
+    public String KEY;
     public String name;
     public String value;
     public Boolean checker;
 
-    home_data(String n, String v, Boolean c){
+    Home_data(String k,String n, String v, Boolean c){
+        KEY = k;
         name = n;
         value = v;
         checker = c;
     }
+    /* Eunjae Lee code END*/
 }

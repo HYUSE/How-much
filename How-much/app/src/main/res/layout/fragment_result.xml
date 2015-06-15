@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/wholesale_name"
-                    android:text="도매가"
+                    android:text="도매 평균가"
                     android:layout_marginRight="5dp"
                     />
                 <TextView
@@ -103,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/retail_name"
-                    android:text="소매가"
+                    android:text="소매 평균가"
                     android:layout_marginRight="5dp"
                     />
                 <TextView

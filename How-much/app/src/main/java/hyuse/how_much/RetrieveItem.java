@@ -1,8 +1,5 @@
 package hyuse.how_much;
 
-import android.util.Log;
-import android.widget.ArrayAdapter;
-
 /**
  * Created by hwang-gyojun on 2015. 5. 10..
  */

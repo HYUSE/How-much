@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by hwang-gyojun on 2015. 4. 30..
@@ -119,7 +118,7 @@ public class DBOpenHelper {
             return;
 
         db.execSQL("UPDATE num_of_search SET count = " + (cursor.getInt(0) + 1)
-                    +" WHERE item_id = " + item_id);
+                +" WHERE item_id = " + item_id);
     }
 
     public void updateRegion(String region_do, String region_si) {
@@ -155,7 +154,7 @@ public class DBOpenHelper {
     public String[] selectSearch() {
         String[] str = {"",""};
 
-        Cursor cursor =  db.rawQuery("SELECT item_id, item_name FROM num_of_search WHERE count >= 5", null);
+        Cursor cursor =  db.rawQuery("SELECT item_id, item_name FROM num_of_search WHERE count >= 5 AND item_id NOT IN (SELECT item_id FROM preference)", null);
         if(cursor.moveToNext()) {
             str[0] += cursor.getInt(0);
             str[1] += cursor.getString(1);
@@ -165,7 +164,6 @@ public class DBOpenHelper {
             str[0] += "," + cursor.getInt(0);
             str[1] += "," + cursor.getString(1);
         }
-
         return str;
     }
 

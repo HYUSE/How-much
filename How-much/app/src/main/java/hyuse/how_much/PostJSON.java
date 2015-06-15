@@ -1,12 +1,7 @@
 package hyuse.how_much;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+
 import android.os.*;
-import android.os.Process;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -19,10 +14,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
@@ -45,7 +36,6 @@ public class PostJSON {
         if (type.equals("result")) {
             String data = "?sub_id=" + sub_id + "&region_si=" + region_si.substring(0,region_si.length()-1);
             String u = url + type + data;
-            System.out.println(u);
             try {
                 task = new HttpAsyncTask();
                 if(task.execute(u, "get").get()) {
@@ -134,7 +124,6 @@ public class PostJSON {
         final int[] end = {1};
         final String[] responseString = new String[1];
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 HttpClient httpClient = new DefaultHttpClient();
@@ -161,43 +150,40 @@ public class PostJSON {
     /* haryeong code end*/
 
     /* Kyojun Hwang  code */
-    public void POST(String json){
-        InputStream inputStream = null;
-        try {
+    public void POST(final String json){
 
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
+        final int[] end = {1};
+        final String[] responseString = new String[1];
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpResponse httpResponse = null;
+                try
+                {
+                    URI url_a = new URI(url);
 
-            StringEntity se = new StringEntity(json, HTTP.UTF_8);
+                    HttpPost httpPost = new HttpPost(url_a);
 
-            httpPost.setEntity(se);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
+                    StringEntity se = new StringEntity(json, HTTP.UTF_8);
 
-            HttpResponse httpResponse = httpclient.execute(httpPost);
+                    httpPost.setEntity(se);
+                    httpPost.setHeader("Accept", "application/json");
+                    httpPost.setHeader("Content-type", "application/json");
 
-            inputStream = httpResponse.getEntity().getContent();
+                    httpResponse = httpClient.execute(httpPost);
+                    responseString[0] = EntityUtils.toString(httpResponse.getEntity(), HTTP.UTF_8);
+                    end[0] = 0;
 
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-    private String convertInputStreamToString(InputStream inputStream) throws IOException{
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream,"utf-8"));
-        String line = "";
-        String result = "";
+            }
+        }).start();
+        while(end[0] == 1){}
 
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
+        result = responseString[0];
     }
 
     private class HttpAsyncTask extends AsyncTask<String, Integer, Boolean> {
