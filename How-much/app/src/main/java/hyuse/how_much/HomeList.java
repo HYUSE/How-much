@@ -1,7 +1,10 @@
 package hyuse.how_much;
 import java.util.ArrayList;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,8 +48,23 @@ public class HomeList extends BaseAdapter {
 
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "리스트 클릭 : "+m_List.get(pos), Toast.LENGTH_SHORT).show();
-                }
+                    Toast.makeText(context, "바로 가기!"+m_List.get(pos).name, Toast.LENGTH_SHORT).show();
+                    ResultFragment newFragment = new ResultFragment();
+
+                    // replace fragment
+                    FragmentTransaction transaction = ((MainActivity)context).getFragmentManager().beginTransaction();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", m_List.get(pos).name);
+                    bundle.putString("sub_id", m_List.get(pos).KEY);
+                    newFragment.setArguments(bundle);
+
+                    transaction.replace(R.id.fragment_layout, newFragment);
+                    transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
+                    FragmentManager fm = ((MainActivity)context).getFragmentManager();                }
             });
         }
 
