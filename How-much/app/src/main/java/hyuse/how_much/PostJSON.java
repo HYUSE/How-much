@@ -1,12 +1,7 @@
 package hyuse.how_much;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
+
 import android.os.*;
-import android.os.Process;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -134,7 +129,6 @@ public class PostJSON {
         final int[] end = {1};
         final String[] responseString = new String[1];
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 HttpClient httpClient = new DefaultHttpClient();
@@ -175,13 +169,14 @@ public class PostJSON {
             httpPost.setHeader("Content-type", "application/json");
 
             HttpResponse httpResponse = httpclient.execute(httpPost);
-
+            result = EntityUtils.toString(httpPost.getEntity(), HTTP.UTF_8);
+/*
             inputStream = httpResponse.getEntity().getContent();
 
             if(inputStream != null)
                 result = convertInputStreamToString(inputStream);
             else
-                result = "Did not work!";
+                result = "Did not work!";*/
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -197,6 +192,7 @@ public class PostJSON {
             result += line;
 
         inputStream.close();
+        bufferedReader.close();
         return result;
     }
 

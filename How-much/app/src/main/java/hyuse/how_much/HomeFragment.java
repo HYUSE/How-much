@@ -3,23 +3,24 @@ package hyuse.how_much;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import static hyuse.how_much.R.id.fragment_layout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HomeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     //private ListView preference_list;
     private ListView preference_list;
     private HomeList list_adapter;
+    private DBOpenHelper db;
     //private ArrayAdapter<String> list_adapter;
 
     public HomeFragment() {
@@ -35,6 +36,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+         db = new DBOpenHelper(getActivity());
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         preference_list = (ListView) view.findViewById(R.id.preference_list);
@@ -42,12 +44,90 @@ public class HomeFragment extends Fragment {
         list_adapter = new HomeList();
         preference_list.setAdapter(list_adapter);
 
-        MakeList();
+        if(db.selectRegion().split(" ").length > 1 && (db.selectPreference().length > 0 || db.selectSearch().length > 0)){
+            Thread x = new Thread(new Runnable() {
+                public void run() {
+                    list_adapter.reset();
+                    MakeList();
+                }
+            });
+            x.run();
+        }
 
         return view;
     }
     private void MakeList() {
+        String[] first = db.selectPreference();
+        String[] first_id = first[0].split(",");
+        String[] first_name = first[1].split(",");
 
+        String[] second = db.selectSearch();
+        String[] second_id = second[0].split(",");
+        String[] second_name = second[1].split(",");
+
+        String region = db.selectRegion().split(" ")[1];
+        region = region.substring(0,region.length()-1);
+
+        PostJSON sender = new PostJSON();
+        sender.setType("home");
+        if(first_id.length > 0) {
+            sender.send(makejson(first_id,region));
+            try {
+                String result = null;
+                while (result == null) {
+                    result = sender.returnResult();
+                }
+                System.out.println("ddd : " + result);
+
+                JSONObject json = new JSONObject(result);
+                JSONArray array = json.getJSONArray("data");
+                int j=0;
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject ss = array.getJSONObject(i);
+                    Home_data data;
+                    if (ss.getString("price_r") != null) {
+                        data = new Home_data(ss.getString("sub_id"),first_name[j], ss.getString("price_r"), true);
+                    } else if (ss.getString("price_w") != null) {
+                        data = new Home_data(ss.getString("sub_id"),first_name[j],ss.getString("price_w"), true);
+                    } else {
+                        data = new Home_data(ss.getString("sub_id"),first_name[j], "정보 없음", true);
+                    }
+                    if(list_adapter.add(data)){
+                        j++;
+                    }
+                }
+
+            } catch (Exception e) {
+
+            }
+        }
+        if(second_id.length > 0) {
+            sender.send(makejson(second_id,region));
+            try {
+                String result = null;
+                while (result == null) {
+                    result = sender.returnResult();
+                }
+                JSONObject json = new JSONObject(result);
+                JSONArray array = json.getJSONArray("data");
+                int j=0;
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject ss = array.getJSONObject(i);
+                    Home_data data;
+                    if (ss.getString("price_r") != null) {
+                        data = new Home_data(ss.getString("sub_id"),second_name[j], ss.getString("price_r")+"원", false);
+                    } else if (ss.getString("price_w") != null) {
+                        data = new Home_data(ss.getString("sub_id"),second_name[j],ss.getString("price_w")+"원", false);
+                    } else {
+                        data = new Home_data(ss.getString("sub_id"),second_name[j], "정보 없음", false);
+                    }
+                    if(list_adapter.add(data)) j++;
+                }
+
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     public void disconnectInternet() {
@@ -79,6 +159,23 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
+    private String makejson(String[] id,String resion_si){
+        JSONObject x = new JSONObject();
+        JSONObject y = new JSONObject();
+        try {
+            x.put("type","home");
+            y.put("region_si",resion_si);
+            JSONArray id_tags = new JSONArray();
+            for(int i=0;i<id.length;i++){
+                id_tags.put(id[i]);
+            }
+            y.put("sub_id",id_tags);
+            x.put("data",y);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return x.toString();
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

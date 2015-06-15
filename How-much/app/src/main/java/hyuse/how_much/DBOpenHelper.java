@@ -155,7 +155,7 @@ public class DBOpenHelper {
     public String[] selectSearch() {
         String[] str = {"",""};
 
-        Cursor cursor =  db.rawQuery("SELECT item_id, item_name FROM num_of_search WHERE count >= 5", null);
+        Cursor cursor =  db.rawQuery("SELECT item_id, item_name FROM num_of_search WHERE count >= 5 AND item_id NOT IN (SELECT item_id FROM preference)", null);
         if(cursor.moveToNext()) {
             str[0] += cursor.getInt(0);
             str[1] += cursor.getString(1);
@@ -165,7 +165,6 @@ public class DBOpenHelper {
             str[0] += "," + cursor.getInt(0);
             str[1] += "," + cursor.getString(1);
         }
-
         return str;
     }
 

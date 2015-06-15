@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,6 +114,7 @@ public class ResultFragment extends Fragment {
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(8f);
+        xAxis.setAvoidFirstLastClipping(true);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -450,6 +449,8 @@ public class ResultFragment extends Fragment {
             //button_retail_bottom.setVisibility(View.VISIBLE);
         }
         */
+        wholesale.setBackground(getResources().getDrawable(R.drawable.button_normal));
+        retail.setBackground(getResources().getDrawable(R.drawable.button_selected));
 
         for (int i = 0; i < retail_data_set_list.size(); i++) {
             dataSets.add(retail_data_set_list.get(i));
@@ -484,10 +485,12 @@ public class ResultFragment extends Fragment {
             //button_wholesale_bottom.setVisibility(View.VISIBLE);
         }
 */
+        wholesale.setBackground(getResources().getDrawable(R.drawable.button_selected));
+        retail.setBackground(getResources().getDrawable(R.drawable.button_normal));
+
         for (int i = 0; i < wholesale_data_set_list.size(); i++) {
             dataSets.add(wholesale_data_set_list.get(i));
         }
-
 
         LineData data = new LineData(x_values, dataSets);
         data.setValueFormatter(new MyLabelFormatter());
