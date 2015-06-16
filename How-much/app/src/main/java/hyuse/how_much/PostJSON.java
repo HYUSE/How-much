@@ -161,7 +161,8 @@ public class PostJSON {
                 HttpResponse httpResponse = null;
                 try
                 {
-                    URI url_a = new URI(url);
+                    String url2 = url +="home/";
+                    URI url_a = new URI(url2);
 
                     HttpPost httpPost = new HttpPost(url_a);
 

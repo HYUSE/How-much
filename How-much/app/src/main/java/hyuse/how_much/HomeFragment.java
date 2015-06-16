@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment {
     private void MakeList() {
         String[] first = db.selectPreference();
         String[] first_id = first[0].split(",");
+        System.out.println("TEST : " + first_id[0]);
         String[] first_name = first[1].split(",");
 
         String[] second = db.selectSearch();
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment {
 
         PostJSON sender = new PostJSON();
         sender.setType("home");
-        if(first_id.length > 0) {
+        if(first_id.length > 0){
             if(sender.send(makejson(first_id,region))) {
                 disconnectInternet();
                 return;
@@ -79,59 +80,71 @@ public class HomeFragment extends Fragment {
                 while (result == null) {
                     result = sender.returnResult();
                 }
-
                 JSONObject json = new JSONObject(result);
+                System.out.println(">>>> " + result);
                 JSONArray array = json.getJSONArray("data");
-                int j=0;
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject ss = array.getJSONObject(i);
-                    Home_data data;
-                    if (ss.getString("price_r") != null) {
-                        data = new Home_data(ss.getString("sub_id"),first_name[j], ss.getString("price_r"), true);
-                    } else if (ss.getString("price_w") != null) {
-                        data = new Home_data(ss.getString("sub_id"),first_name[j],ss.getString("price_w"), true);
-                    } else {
-                        data = new Home_data(ss.getString("sub_id"),first_name[j], "정보 없음", true);
-                    }
-                    if(list_adapter.add(data)){
-                        j++;
-                    }
-                }
 
-            } catch (Exception e) {
+                for(int i=0; i<array.length(); i++){
+                    JSONObject obj = array.getJSONObject(i);
+                    String KEY = obj.getString("sub_id");
+                    String name = first_name[i];
+                    String price = (obj.getString("price_r") != null) ? obj.getString("price_r") : obj.getString("price_w");
+                    price = (price != null) ? price : "0";
+                    Home_data data = new Home_data(KEY, name, price, true);
+                    list_adapter.add(data);
+                }
+            } catch (Exception e){
 
             }
         }
-        if(second_id.length > 0) {
+        sender = new PostJSON();
+        sender.setType("home");
+
+        if(second_id.length > 0){
             if(sender.send(makejson(second_id,region))) {
                 disconnectInternet();
                 return;
             }
+
             try {
                 String result = null;
                 while (result == null) {
                     result = sender.returnResult();
                 }
                 JSONObject json = new JSONObject(result);
+                System.out.println(">>>> " + result);
+                JSONArray array = json.getJSONArray("data");
+
+                for(int i=0; i<array.length(); i++){
+                    JSONObject obj = array.getJSONObject(i);
+                    String KEY = obj.getString("sub_id");
+                    String name = second_name[i];
+                    String price = (obj.getString("price_r") != null) ? obj.getString("price_r") : obj.getString("price_w");
+                    price = (price != null) ? price : "0";
+                    Home_data data = new Home_data(KEY,name, price, false);
+                    list_adapter.add(data);
+                }
+            } catch (Exception e){
+
+            }
+        }
+/*
                 JSONArray array = json.getJSONArray("data");
                 int j=0;
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject ss = array.getJSONObject(i);
                     Home_data data;
                     if (ss.getString("price_r") != null) {
-                        data = new Home_data(ss.getString("sub_id"),second_name[j], ss.getString("price_r")+"원", false);
                     } else if (ss.getString("price_w") != null) {
-                        data = new Home_data(ss.getString("sub_id"),second_name[j],ss.getString("price_w")+"원", false);
                     } else {
-                        data = new Home_data(ss.getString("sub_id"),second_name[j], "정보 없음", false);
                     }
-                    if(list_adapter.add(data)) j++;
                 }
 
             } catch (Exception e) {
 
             }
         }
+        */
     }
 
     public void disconnectInternet() {

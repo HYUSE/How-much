@@ -46,9 +46,8 @@ public class HomeList extends BaseAdapter {
 
             convertView.setOnClickListener(new OnClickListener() {
 
-                @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "바로 가기!"+m_List.get(pos).name, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "바로 가기! "+m_List.get(pos).name, Toast.LENGTH_SHORT).show();
                     ResultFragment newFragment = new ResultFragment();
 
                     // replace fragment
@@ -70,23 +69,19 @@ public class HomeList extends BaseAdapter {
 
         return convertView;
     }
-    public boolean add(Home_data item) {
-        boolean chk = true;
-        for(int i=0;i<getCount();i++){
-            Home_data t = m_List.get(i);
-            if(t.KEY != item.KEY){
-                continue;
-            }
-            else{
-                if(Integer.parseInt(t.value) > Integer.parseInt(item.value)){
-                    m_List.remove(i);
-                    chk = false;
+    public void add(Home_data item) {
+        m_List.add(item);
+    }
+    public boolean key_chk(Home_data item){
+        for(int i=0;i<m_List.size();i++){
+            if(m_List.get(i).KEY == item.KEY){
+                if(Integer.parseInt(m_List.get(i).value) > Integer.parseInt(item.value)){
+                    m_List.set(i,new Home_data(item.KEY,m_List.get(i).name,item.value,item.checker));
+                    return true;
                 }
             }
-
         }
-        m_List.add(item);
-        return chk;
+        return false;
     }
     public void remove(int _position) {
         m_List.remove(_position);
