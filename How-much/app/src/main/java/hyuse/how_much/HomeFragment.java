@@ -100,8 +100,8 @@ public class HomeFragment extends Fragment {
         sender = new PostJSON();
         sender.setType("home");
 
-        if(second_id.length > 0){
-            if(sender.send(makejson(second_id,region))) {
+        if(second_id.length > 0) {
+            if (sender.send(makejson(second_id, region))) {
                 disconnectInternet();
                 return;
             }
@@ -115,36 +115,19 @@ public class HomeFragment extends Fragment {
                 System.out.println(">>>> " + result);
                 JSONArray array = json.getJSONArray("data");
 
-                for(int i=0; i<array.length(); i++){
+                for (int i = 0; i < array.length(); i++) {
                     JSONObject obj = array.getJSONObject(i);
                     String KEY = obj.getString("sub_id");
                     String name = second_name[i];
                     String price = (obj.getString("price_r") != null) ? obj.getString("price_r") : obj.getString("price_w");
                     price = (price != null) ? price : "0";
-                    Home_data data = new Home_data(KEY,name, price, false);
+                    Home_data data = new Home_data(KEY, name, price, false);
                     list_adapter.add(data);
                 }
-            } catch (Exception e){
-
-            }
-        }
-/*
-                JSONArray array = json.getJSONArray("data");
-                int j=0;
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject ss = array.getJSONObject(i);
-                    Home_data data;
-                    if (ss.getString("price_r") != null) {
-                    } else if (ss.getString("price_w") != null) {
-                    } else {
-                    }
-                }
-
             } catch (Exception e) {
 
             }
         }
-        */
     }
 
     public void disconnectInternet() {
@@ -191,6 +174,7 @@ public class HomeFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        System.out.println(x.toString());
         return x.toString();
     }
     /**
