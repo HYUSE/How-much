@@ -4,24 +4,20 @@
     tools:context="com.example.hwang_gyojun.hyu_se.GpsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Cannot Find..."
-        android:textSize="30sp"
-        android:id="@+id/GPS_info"
-        android:layout_gravity="center_horizontal|bottom"
-        android:editable="false"
-        android:textStyle="bold|italic"
-        android:padding="10dp" />
+
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="right|center_vertical">
-
+        android:layout_gravity="right|center_vertical"
+        android:padding="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수동 설정"
+            android:textSize="20dp"
+            />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -46,9 +42,23 @@
         <Button
             android:layout_width="300dp"
             android:layout_height="100dp"
-            android:text="자동 찾기"
+            android:text="자동 설정"
             android:id="@+id/button_confirm"
             android:layout_gravity="center_horizontal"
+            android:background="@color/switch_thumb_normal_material_dark"
             android:layout_marginTop="30dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Cannot Find..."
+            android:textSize="30sp"
+            android:id="@+id/GPS_info"
+            android:layout_gravity="center_horizontal|bottom"
+            android:editable="false"
+            android:textStyle="bold|italic"
+            android:padding="10dp" />
     </LinearLayout>
+
+
 </FrameLayout>
