@@ -205,12 +205,18 @@ def home(request):
 	request_j = json.loads(request.body)
 	region_si = request_j["data"]["region_si"]
 	response_j = dict(data=list())
-	now = date.today()
-	now = "%d%02d%02d" % (now.year, now.month, now.day)
-	now = "20150504"#remove
+	#now = date.today()
+	#now = "%d%02d%02d" % (now.year, now.month, now.day)
+	#now = "20150504"#remove
 	for data in request_j["data"]["sub_id"]:# data : {"sub_id":"91"}
-		items = Item.objects.filter(category__sub__id=data, region__name=region_si, price_date=dateutil.parser.parse(now))
-		for item in items:
-			response_j["data"].append(dict(sub_id=item.category.sub.id, sub_name=item.category.sub.name, price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w))
+        date = Item.objects.filter(category__sub__id=data, region__name=region_si).order_by(Coalesce('price_date','price_date').desc())[:1]
+        if len(date) == 0:
+            continue
+        date = date[0].price_date
+        price_date = str(date)
+        price_date = price_date[0:4]+price_date[5:7]+price_date[8:]
+        items = Item.objects.filter(category__sub__id=data, region__name=region_si, price_date=date)        
+        item = items[0]
+        response_j["data"].append(dict(sub_id=item.category.sub.id, sub_name=item.category.sub.name, price_r=item.price_r, price_w=item.price_w, unit_r=item.unit_r, unit_w=item.unit_w, price_date=price_date))
 	return HttpResponse(json.dumps(response_j), content_type="application/json")
 
